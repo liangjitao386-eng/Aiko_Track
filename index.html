@@ -229,6 +229,11 @@
             color: var(--text-secondary);
         }
 
+        /* 确保图例文字在主题切换时跟随颜色变量 */
+        .chart-legend-item span:last-child {
+            color: var(--text-secondary);
+        }
+
         .chart-legend-color {
             width: 10px;
             height: 10px;
@@ -963,7 +968,7 @@
             
             // 使用 Topcon183成本指数-半一体化预估 作为对比基准
             const topconSemiEstPrice = productFormulas['topcon-semi-est'].formula(silverPrice, waferPrice);
-            document.getElementById('smm-baseline').textContent = topconSemiEstPrice.toFixed(4);
+            document.getElementById('smm-baseline').textContent = topconSemiEstPrice.toFixed(3);
             
             const baselineKey = 'topcon-semi-est';
             const products = [
@@ -983,8 +988,8 @@
                         <div>${p.name}</div>
                         <div class="cost-capacity">${isBaseline ? '对比基准' : '产能: ' + p.capacity}</div>
                     </td>
-                    <td><span class="cost-value">${cost.toFixed(4)} 元/W</span></td>
-                    <td><span class="cost-card-diff ${diffClass}">${diffSign}${diff.toFixed(4)} 元/W</span></td>
+                    <td><span class="cost-value">${cost.toFixed(3)} 元/W</span></td>
+                    <td><span class="cost-card-diff ${diffClass}">${diffSign}${diff.toFixed(3)} 元/W</span></td>
                 </tr>`;
             }).join('');
         }
