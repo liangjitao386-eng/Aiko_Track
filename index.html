@@ -548,7 +548,7 @@
                         <tr>
                             <th>产品 / 产能</th>
                             <th>当前成本</th>
-                            <th>相对Topcon183半一体化预估</th>
+                            <th>对比Topcon</th>
                         </tr>
                     </thead>
                     <tbody id="abc-cost-table-body"></tbody>
@@ -956,6 +956,20 @@
                 },
                 options: chartOptions
             });
+
+            // 移动端：手指松开后立即隐藏浮层
+            const clearTooltip = () => {
+                const instance = Chart.getChart(ctx);
+                if (!instance || !instance.tooltip) return;
+                instance.tooltip.setActiveElements([], { x: 0, y: 0 });
+                instance.update();
+            };
+
+            ['touchend', 'touchcancel', 'pointerup', 'pointercancel'].forEach(evt => {
+                ctx.addEventListener(evt, clearTooltip, { passive: true });
+            });
+
+            return chart;
         }
 
         // 更新成本汇总表
@@ -1101,8 +1115,7 @@
                             backgroundColor: 'transparent',
                             tension: 0.4,
                             pointRadius: 2,
-                            borderWidth: 2,
-                            borderDash: [5, 5]
+                            borderWidth: 2
                         },
                         {
                             label: '无银ABC（济南）',
@@ -1111,8 +1124,7 @@
                             backgroundColor: 'transparent',
                             tension: 0.4,
                             pointRadius: 2,
-                            borderWidth: 2,
-                            borderDash: [5, 5]
+                            borderWidth: 2
                         },
                         {
                             label: 'Topcon183成本指数-半一体化预估',
@@ -1174,6 +1186,18 @@
                     `;
                 }).join('');
             }
+
+            // 移动端：手指松开后立即隐藏浮层
+            const clearTooltip = () => {
+                if (!chart || !chart.tooltip) return;
+                chart.tooltip.setActiveElements([], { x: 0, y: 0 });
+                chart.update();
+            };
+
+            const canvas = ctx;
+            ['touchend', 'touchcancel', 'pointerup', 'pointercancel'].forEach(evt => {
+                canvas.addEventListener(evt, clearTooltip, { passive: true });
+            });
         }
 
         // 创建银价变化走势图
@@ -1213,8 +1237,7 @@
                     backgroundColor: 'transparent',
                     tension: 0.4,
                     pointRadius: 3,
-                    borderWidth: 2,
-                    borderDash: [5, 5]
+                    borderWidth: 2
                 },
                 {
                     label: '无银ABC（济南）',
@@ -1223,8 +1246,7 @@
                     backgroundColor: 'transparent',
                     tension: 0.4,
                     pointRadius: 3,
-                    borderWidth: 2,
-                    borderDash: [5, 5]
+                    borderWidth: 2
                 },
                 {
                     label: 'Topcon183半一体化预估',
@@ -1293,6 +1315,18 @@
                     `;
                 }).join('');
             }
+
+            // 移动端：手指松开后立即隐藏浮层
+            const clearTooltip = () => {
+                if (!chart || !chart.tooltip) return;
+                chart.tooltip.setActiveElements([], { x: 0, y: 0 });
+                chart.update();
+            };
+
+            const canvas = ctx;
+            ['touchend', 'touchcancel', 'pointerup', 'pointercancel'].forEach(evt => {
+                canvas.addEventListener(evt, clearTooltip, { passive: true });
+            });
         }
 
         // 更新表格
