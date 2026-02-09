@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -92,72 +91,6 @@
             display: inline-block;
         }
 
-        /* 滑块控制区 */
-        .slider-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        .slider-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .slider-title { font-size: 16px; font-weight: 600; color: var(--text-color); }
-
-        .slider-value { font-size: 24px; font-weight: 700; color: var(--accent-color); }
-
-        .slider-input {
-            width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            background: var(--border-color);
-            outline: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-        }
-
-        .slider-input::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .slider-range {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .smm-price-display {
-            margin-top: 12px;
-            padding: 8px 12px;
-            background: rgba(52, 152, 219, 0.1);
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .smm-price-display .price { color: var(--accent-color); font-weight: 600; }
-
         /* 成本卡片网格 */
         .cost-grid {
             display: grid;
@@ -175,6 +108,7 @@
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .cost-card::before {
@@ -206,6 +140,40 @@
         .cost-card-diff.positive { background: rgba(231, 76, 60, 0.1); color: var(--danger-color); }
         .cost-card-diff.negative { background: rgba(39, 174, 96, 0.1); color: var(--success-color); }
 
+        /* 公式展示区 */
+        .formula-display {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+            display: none;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .formula-display.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .formula-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .formula-text {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
         /* 图表区域 */
         .charts-grid {
             display: grid;
@@ -223,6 +191,7 @@
 
         .chart-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-color); }
         .chart-container { position: relative; height: 300px; }
+        .chart-container-large { position: relative; height: 400px; }
 
         /* 表格样式 */
         .table-wrapper {
@@ -269,6 +238,27 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* 价格参数显示 */
+        .price-params {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .price-param {
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .price-param-label { color: var(--text-secondary); font-size: 14px; }
+        .price-param-value { color: var(--accent-color); font-weight: 700; font-size: 18px; }
+
         /* 响应式 */
         @media (max-width: 768px) {
             .container { padding: 15px; }
@@ -296,6 +286,24 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
         }
+
+        .comparison-note {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .comparison-note span {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .chart-note {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -307,43 +315,41 @@
             </div>
         </header>
 
-        <!-- 价格滑块控制 -->
-        <section class="section">
-            <h2 class="section-title">价格参数设置</h2>
-            <div class="slider-controls">
-                <div class="slider-card">
-                    <div class="slider-label">
-                        <span class="slider-title">银价 (元/kg)</span>
-                        <span class="slider-value" id="silver-value">20992</span>
-                    </div>
-                    <input type="range" class="slider-input" id="silver-slider" min="1000" max="50000" value="20992" step="100">
-                    <div class="slider-range"><span>1,000</span><span>50,000</span></div>
-                    <div class="smm-price-display">
-                        SMM实时价格: <span class="price">20,992 元/kg (2026-02-09)</span>
-                    </div>
-                </div>
-                <div class="slider-card">
-                    <div class="slider-label">
-                        <span class="slider-title">N型硅片-183mm价格 (元/片)</span>
-                        <span class="slider-value" id="wafer-value">1.18</span>
-                    </div>
-                    <input type="range" class="slider-input" id="wafer-slider" min="0.5" max="5" value="1.175" step="0.01">
-                    <div class="slider-range"><span>0.50</span><span>5.00</span></div>
-                    <div class="smm-price-display">
-                        SMM实时价格: <span class="price">1.18 元/片 (2026-02-09)</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- 爱旭成本预估 -->
         <section class="section">
             <h2 class="section-title">爱旭产品成本预估</h2>
-            <div id="abc-module" class="tab-content active">
-                <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px;">
-                    成本对比基准: <span style="color: var(--accent-color); font-weight: 600;">SMM Topcon183成本指数-半一体化 (2026年2月6日-0.84 元/W，以实时数据为准)</span>
-                </p>
-                <div class="cost-grid" id="abc-cost-cards"></div>
+            
+            <div class="price-params">
+                <div class="price-param">
+                    <span class="price-param-label">银价 (SMM实时):</span>
+                    <span class="price-param-value" id="silver-display">20,992 元/kg</span>
+                </div>
+                <div class="price-param">
+                    <span class="price-param-label">硅片价格 (SMM实时):</span>
+                    <span class="price-param-value" id="wafer-display">1.18 元/片</span>
+                </div>
+            </div>
+            
+            <p class="comparison-note">
+                成本对比基准: <span>Topcon183成本指数-半一体化预估 (当前: <span id="smm-baseline">0.84</span> 元/W)</span>
+            </p>
+            
+            <div class="cost-grid" id="abc-cost-cards"></div>
+            
+            <!-- 公式展示区域 -->
+            <div class="formula-display" id="formula-display">
+                <div class="formula-label">计算公式:</div>
+                <div class="formula-text" id="formula-text"></div>
+            </div>
+        </section>
+
+        <!-- 银价变化走势图 -->
+        <section class="section">
+            <h2 class="section-title">银价变化下的成本走势</h2>
+            <div class="chart-card">
+                <div class="chart-title">五种产品成本 vs 银价 (硅片价格固定: 1.2 元/片)</div>
+                <div class="chart-container-large"><canvas id="silver-trend-chart"></canvas></div>
+                <p class="chart-note">X轴: 银价 (元/kg) | Y轴: 组件成本 (元/W)</p>
             </div>
         </section>
 
@@ -626,6 +632,43 @@
             ]
         };
 
+        // 产品公式定义
+        const productFormulas = {
+            'abc-smbb': {
+                name: '有银ABC-SMBB组件（义乌）',
+                capacity: '6GW',
+                formula: (silver, wafer) => 0.485 + silver * 0.00000928 + wafer * 0.95 / 9.16 + 0.017,
+                formulaText: '成本 = 0.485 + 银价 × 0.00000928 + 硅片 × 0.95 ÷ 9.16 + 专利费0.017\n     = 0.502 + 银价 × 0.00000928 + 硅片 × 0.95 ÷ 9.16'
+            },
+            'abc-0bb': {
+                name: '有银ABC-0BB组件（义乌）',
+                capacity: '2GW',
+                formula: (silver, wafer) => 0.485 + silver * 0.00000928 + wafer * 0.95 / 9.16 + 0.017 - 0.0000015 * silver,
+                formulaText: '成本 = 有银ABC-SMBB - 0.0000015 × 银价\n     = 0.502 + 银价 × 0.00000778 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
+            },
+            'abc-silverfree-zh': {
+                name: '无银ABC组件（珠海）',
+                capacity: '10GW',
+                formula: (silver, wafer) => 0.485 + wafer * 0.95 / 9.16 + 0.017 + 0.09,
+                formulaText: '成本 = 有银ABC-SMBB - 银价 × 0.00000928 + 0.09(铜电镀成本与设备折旧)\n     = 0.592 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
+            },
+            'abc-silverfree-jn': {
+                name: '无银ABC组件（济南）',
+                capacity: '2GW',
+                formula: (silver, wafer) => 0.485 + wafer * 0.95 / 9.16 + 0.017 + 0.09 - 0.03,
+                formulaText: '成本 = 无银ABC（珠海）- 0.03\n     = 0.562 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
+            },
+            'topcon-semi-est': {
+                name: 'Topcon183成本指数-半一体化预估',
+                capacity: '行业基准',
+                formula: (silver, wafer) => 0.475 + silver * 0.00000928 + wafer / 8.68,
+                formulaText: '成本 = 0.475 + 银价 × 0.00000928 + 硅片 ÷ 8.68'
+            }
+        };
+
+        // 当前选中的产品
+        let selectedProduct = null;
+
         // 主题切换
         function toggleTheme() {
             const body = document.body;
@@ -694,41 +737,169 @@
             });
         }
 
-        // 更新成本卡片 - 修正公式
+        // 更新成本卡片
         function updateCostCards() {
-            const silverPrice = parseFloat(document.getElementById('silver-slider').value);
-            const waferPrice = parseFloat(document.getElementById('wafer-slider').value);
+            const silverPrice = smmData.silver[smmData.silver.length - 1].price;
+            const waferPrice = smmData.wafer[smmData.wafer.length - 1].price;
             
-            document.getElementById('silver-value').textContent = silverPrice.toLocaleString();
-            document.getElementById('wafer-value').textContent = waferPrice.toFixed(2);
+            document.getElementById('silver-display').textContent = silverPrice.toLocaleString() + ' 元/kg';
+            document.getElementById('wafer-display').textContent = waferPrice.toFixed(2) + ' 元/片';
             
-            // ABC组件成本计算 - 修正公式: 0.000009 (不是 0.0000009)
-            const abcSMBB = 0.485 + silverPrice * 0.00000928 + waferPrice * 0.95 / 9.16;
-            const abc0BB = abcSMBB - 0.0000015 * silverPrice;
-            const abcSilverFreeZH = abcSMBB - 0.00000928 * silverPrice + 0.09;
-            const abcSilverFreeJN = abcSilverFreeZH - 0.03;
+            // 使用 Topcon183成本指数-半一体化预估 作为对比基准
+            const topconSemiEstPrice = productFormulas['topcon-semi-est'].formula(silverPrice, waferPrice);
+            document.getElementById('smm-baseline').textContent = topconSemiEstPrice.toFixed(4);
             
-            // SMM Topcon183成本指数-半一体化 最新价格作为对比基准
-            const topconSemiPrice = smmData.topconSemi[smmData.topconSemi.length - 1].price;
+            const products = Object.entries(productFormulas);
             
-            const abcProducts = [
-                { name: '有银ABC-SMBB组件（义乌）9.28mg/W', capacity: '6GW', cost: abcSMBB },
-                { name: '有银ABC-0BB组件（义乌）7.64mg/W', capacity: '2GW', cost: abc0BB },
-                { name: '无银ABC组件（珠海）铜价波动忽略不计', capacity: '10GW', cost: abcSilverFreeZH },
-                { name: '无银ABC组件（济南）铜价波动忽略不计', capacity: '2GW', cost: abcSilverFreeJN }
-            ];
-            
-            document.getElementById('abc-cost-cards').innerHTML = abcProducts.map(p => {
-                const diff = p.cost - topconSemiPrice;
+            document.getElementById('abc-cost-cards').innerHTML = products.map(([key, p]) => {
+                const cost = p.formula(silverPrice, waferPrice);
+                const diff = cost - topconSemiEstPrice;
                 const diffClass = diff >= 0 ? 'positive' : 'negative';
                 const diffSign = diff >= 0 ? '+' : '';
-                return `<div class="cost-card">
+                const isBaseline = key === 'topcon-semi-est';
+                
+                return `<div class="cost-card" data-product="${key}" onclick="showFormula('${key}')">
                     <div class="cost-card-title">${p.name}</div>
-                    <div class="cost-card-capacity">产能: ${p.capacity}</div>
-                    <div class="cost-card-value">${p.cost.toFixed(4)} 元/W</div>
-                    <span class="cost-card-diff ${diffClass}">vs SMM: ${diffSign}${diff.toFixed(4)} 元/W</span>
+                    <div class="cost-card-capacity">${isBaseline ? '对比基准' : '产能: ' + p.capacity}</div>
+                    <div class="cost-card-value">${cost.toFixed(4)} 元/W</div>
+                    <span class="cost-card-diff ${diffClass}">vs 半一体化预估: ${diffSign}${diff.toFixed(4)} 元/W</span>
                 </div>`;
             }).join('');
+        }
+
+        // 显示公式
+        function showFormula(productKey) {
+            const formulaDisplay = document.getElementById('formula-display');
+            const formulaText = document.getElementById('formula-text');
+            
+            // 如果点击的是同一个产品，则隐藏
+            if (selectedProduct === productKey) {
+                formulaDisplay.classList.remove('active');
+                selectedProduct = null;
+                document.querySelectorAll('.cost-card').forEach(c => c.style.borderColor = '');
+                return;
+            }
+            
+            selectedProduct = productKey;
+            const product = productFormulas[productKey];
+            
+            // 高亮选中的卡片
+            document.querySelectorAll('.cost-card').forEach(c => {
+                c.style.borderColor = c.dataset.product === productKey ? 'var(--accent-color)' : '';
+            });
+            
+            formulaText.innerHTML = `<strong>${product.name}</strong><br><br>${product.formulaText.replace(/\n/g, '<br>')}`;
+            formulaDisplay.classList.add('active');
+        }
+
+        // 创建银价变化走势图
+        function createSilverTrendChart() {
+            const ctx = document.getElementById('silver-trend-chart');
+            if (!ctx) return;
+            
+            const waferPrice = 1.2; // 固定硅片价格
+            const silverPrices = [];
+            for (let s = 10000; s <= 50000; s += 2000) {
+                silverPrices.push(s);
+            }
+            
+            const datasets = [
+                {
+                    label: '有银ABC-SMBB（义乌）',
+                    data: silverPrices.map(s => productFormulas['abc-smbb'].formula(s, waferPrice)),
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    borderWidth: 2
+                },
+                {
+                    label: '有银ABC-0BB（义乌）',
+                    data: silverPrices.map(s => productFormulas['abc-0bb'].formula(s, waferPrice)),
+                    borderColor: '#3498db',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    borderWidth: 2
+                },
+                {
+                    label: '无银ABC（珠海）',
+                    data: silverPrices.map(s => productFormulas['abc-silverfree-zh'].formula(s, waferPrice)),
+                    borderColor: '#27ae60',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    borderWidth: 2,
+                    borderDash: [5, 5]
+                },
+                {
+                    label: '无银ABC（济南）',
+                    data: silverPrices.map(s => productFormulas['abc-silverfree-jn'].formula(s, waferPrice)),
+                    borderColor: '#9b59b6',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    borderWidth: 2,
+                    borderDash: [5, 5]
+                },
+                {
+                    label: 'Topcon183半一体化预估',
+                    data: silverPrices.map(s => productFormulas['topcon-semi-est'].formula(s, waferPrice)),
+                    borderColor: '#f39c12',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    borderWidth: 3
+                }
+            ];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: silverPrices.map(s => (s/1000).toFixed(0) + 'k'),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                title: (items) => '银价: ' + items[0].label + ' 元/kg',
+                                label: (context) => context.dataset.label + ': ' + context.parsed.y.toFixed(4) + ' 元/W'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '银价 (元/kg)', font: { weight: 'bold' } },
+                            grid: { display: false },
+                            ticks: { color: '#7f8c8d' }
+                        },
+                        y: {
+                            title: { display: true, text: '组件成本 (元/W)', font: { weight: 'bold' } },
+                            grid: { color: 'rgba(128,128,128,0.1)' },
+                            ticks: { color: '#7f8c8d' }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
         }
 
         // 更新表格
@@ -762,13 +933,10 @@
             }).join('');
         }
 
-        // 滑块事件
-        document.getElementById('silver-slider').addEventListener('input', updateCostCards);
-        document.getElementById('wafer-slider').addEventListener('input', updateCostCards);
-
         // 初始化
         updateCostCards();
         updateTables();
+        createSilverTrendChart();
 
         // 创建所有图表
         createChart('silicon-chart', smmData.silicon, 'N型多晶硅', '#e74c3c');
