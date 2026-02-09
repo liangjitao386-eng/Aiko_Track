@@ -92,49 +92,67 @@
             display: inline-block;
         }
 
-        /* 成本卡片网格 */
-        .cost-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .cost-card {
+        /* 成本汇总表 */
+        .cost-table-wrapper {
+            margin-top: 16px;
+            margin-bottom: 24px;
             background: var(--card-bg);
             border-radius: 16px;
-            padding: 24px;
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
+            padding: 16px 20px;
+            overflow-x: auto;
+        }
+
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .cost-table thead th {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .cost-table tbody td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            white-space: nowrap;
+        }
+
+        .cost-row {
             cursor: pointer;
+            transition: background 0.2s ease;
         }
 
-        .cost-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+        .cost-row:hover {
+            background: rgba(52, 152, 219, 0.04);
         }
 
-        .cost-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
+        .cost-row.active {
+            background: rgba(52, 152, 219, 0.08);
         }
 
-        .cost-card-title { font-size: 15px; font-weight: 600; color: var(--text-color); margin-bottom: 8px; }
-        .cost-card-capacity { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
-        .cost-card-value { font-size: 32px; font-weight: 700; color: var(--accent-color); margin-bottom: 8px; }
+        .cost-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .cost-capacity {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
 
         .cost-card-diff {
-            font-size: 14px;
-            padding: 4px 12px;
-            border-radius: 20px;
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 999px;
             display: inline-block;
         }
 
@@ -194,6 +212,43 @@
         .chart-container { position: relative; height: 300px; }
         .chart-container-large { position: relative; height: 400px; }
 
+        /* 自定义图例布局 */
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .chart-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .chart-legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+
+        .chart-legend-color.line-main {
+            background-color: transparent;
+        }
+
+        .chart-legend-color.line-dashed {
+            background-color: transparent;
+        }
+
+        /* 爱旭成本走势图单独拉高一点 */
+        .chart-container-abc {
+            height: 420px;
+        }
+
         /* 表格样式 */
         .table-wrapper {
             overflow-x: auto;
@@ -214,6 +269,12 @@
             color: white;
             font-weight: 600;
             font-size: 14px;
+        }
+
+        /* 单独覆盖成本表头的颜色以适配主题 */
+        .cost-table thead th {
+            background: var(--card-bg);
+            color: var(--text-color);
         }
 
         tr:hover { background: rgba(52, 152, 219, 0.05); }
@@ -357,6 +418,24 @@
                 height: 260px;
             }
 
+            .chart-container-abc {
+                height: 340px;
+            }
+
+            .cost-table-wrapper {
+                overflow-x: visible;
+            }
+
+            .cost-table thead th,
+            .cost-table tbody td {
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .cost-value {
+                font-size: 14px;
+            }
+
             th,
             td {
                 padding: 10px 12px;
@@ -449,14 +528,27 @@
                 成本对比基准: <span>Topcon183成本指数-半一体化预估 (当前: <span id="smm-baseline">0.84</span> 元/W)</span>
             </p>
 
-            <!-- 爱旭产品成本走势图（放在卡片上方） -->
+            <!-- 爱旭产品成本走势图 -->
             <div class="chart-card" style="margin-top: 16px;">
                 <div class="chart-title">爱旭产品成本走势（基于SMM银价与硅片价格）</div>
-                <div class="chart-container-large"><canvas id="abc-cost-trend-chart"></canvas></div>
-                <p class="chart-note">说明：按每日 SMM 银价与硅片价格，分别计算有银 / 无银 ABC（义乌 / 珠海 / 济南）以及 Topcon 半一体化预估的组件成本走势。</p>
+                <div class="chart-legend" id="abc-cost-trend-legend"></div>
+                <div class="chart-container-large chart-container-abc">
+                    <canvas id="abc-cost-trend-chart"></canvas>
+                </div>
             </div>
 
-            <div class="cost-grid" id="abc-cost-cards"></div>
+            <div class="cost-table-wrapper">
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th>产品 / 产能</th>
+                            <th>当前成本</th>
+                            <th>相对Topcon183半一体化预估</th>
+                        </tr>
+                    </thead>
+                    <tbody id="abc-cost-table-body"></tbody>
+                </table>
+            </div>
             
             <!-- 公式展示区域 -->
             <div class="formula-display" id="formula-display">
@@ -470,8 +562,10 @@
             <h2 class="section-title">银价变化下的成本走势</h2>
             <div class="chart-card">
                 <div class="chart-title">银价变化下的成本走势 (硅片价格固定: 1.2 元/片)</div>
-                <div class="chart-container-large"><canvas id="silver-trend-chart"></canvas></div>
-                <p class="chart-note"></p>
+                <div class="chart-legend" id="silver-trend-legend"></div>
+                <div class="chart-container-large">
+                    <canvas id="silver-trend-chart"></canvas>
+                </div>
             </div>
         </section>
 
@@ -837,7 +931,7 @@
             gradient.addColorStop(0, color + '40');
             gradient.addColorStop(1, color + '05');
 
-            new Chart(ctx, {
+            const chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.map(d => d.date.substring(5)),
@@ -859,7 +953,7 @@
             });
         }
 
-        // 更新成本卡片
+        // 更新成本汇总表
         function updateCostCards() {
             const silverPrice = smmData.silver[smmData.silver.length - 1].price;
             const waferPrice = smmData.wafer[smmData.wafer.length - 1].price;
@@ -871,21 +965,27 @@
             const topconSemiEstPrice = productFormulas['topcon-semi-est'].formula(silverPrice, waferPrice);
             document.getElementById('smm-baseline').textContent = topconSemiEstPrice.toFixed(4);
             
-            const products = Object.entries(productFormulas);
+            const baselineKey = 'topcon-semi-est';
+            const products = [
+                [baselineKey, productFormulas[baselineKey]],
+                ...Object.entries(productFormulas).filter(([key]) => key !== baselineKey)
+            ];
             
-            document.getElementById('abc-cost-cards').innerHTML = products.map(([key, p]) => {
+            document.getElementById('abc-cost-table-body').innerHTML = products.map(([key, p]) => {
                 const cost = p.formula(silverPrice, waferPrice);
                 const diff = cost - topconSemiEstPrice;
                 const diffClass = diff >= 0 ? 'positive' : 'negative';
                 const diffSign = diff >= 0 ? '+' : '';
                 const isBaseline = key === 'topcon-semi-est';
                 
-                return `<div class="cost-card" data-product="${key}" onclick="showFormula('${key}')">
-                    <div class="cost-card-title">${p.name}</div>
-                    <div class="cost-card-capacity">${isBaseline ? '对比基准' : '产能: ' + p.capacity}</div>
-                    <div class="cost-card-value">${cost.toFixed(4)} 元/W</div>
-                    <span class="cost-card-diff ${diffClass}">vs Topcon183半一体化预估: ${diffSign}${diff.toFixed(4)} 元/W</span>
-                </div>`;
+                return `<tr class="cost-row" data-product="${key}" onclick="showFormula('${key}')">
+                    <td>
+                        <div>${p.name}</div>
+                        <div class="cost-capacity">${isBaseline ? '对比基准' : '产能: ' + p.capacity}</div>
+                    </td>
+                    <td><span class="cost-value">${cost.toFixed(4)} 元/W</span></td>
+                    <td><span class="cost-card-diff ${diffClass}">${diffSign}${diff.toFixed(4)} 元/W</span></td>
+                </tr>`;
             }).join('');
         }
 
@@ -898,16 +998,20 @@
             if (selectedProduct === productKey) {
                 formulaDisplay.classList.remove('active');
                 selectedProduct = null;
-                document.querySelectorAll('.cost-card').forEach(c => c.style.borderColor = '');
+                document.querySelectorAll('.cost-row').forEach(r => r.classList.remove('active'));
                 return;
             }
             
             selectedProduct = productKey;
             const product = productFormulas[productKey];
             
-            // 高亮选中的卡片
-            document.querySelectorAll('.cost-card').forEach(c => {
-                c.style.borderColor = c.dataset.product === productKey ? 'var(--accent-color)' : '';
+            // 高亮选中的行
+            document.querySelectorAll('.cost-row').forEach(r => {
+                if (r.dataset.product === productKey) {
+                    r.classList.add('active');
+                } else {
+                    r.classList.remove('active');
+                }
             });
             
             formulaText.innerHTML = `<strong>${product.name}</strong><br><br>${product.formulaText.replace(/\n/g, '<br>')}`;
@@ -962,7 +1066,7 @@
                 )
             );
 
-            new Chart(ctx, {
+            const chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: dates.map(d => d.substring(5)), // 显示 MM-DD
@@ -1021,13 +1125,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { size: 12 }
-                            }
+                            display: false
                         },
                         tooltip: {
                             mode: 'index',
@@ -1057,6 +1155,20 @@
                     }
                 }
             });
+
+            // 使用自定义图例，避免占用图表高度
+            const legendContainer = document.getElementById('abc-cost-trend-legend');
+            if (legendContainer) {
+                legendContainer.innerHTML = chart.data.datasets.map(ds => {
+                    const color = ds.borderColor || '#3498db';
+                    return `
+                        <div class="chart-legend-item">
+                            <span class="chart-legend-color" style="border-color: ${color};"></span>
+                            <span>${ds.label}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // 创建银价变化走势图
@@ -1120,7 +1232,7 @@
                 }
             ];
             
-            new Chart(ctx, {
+            const chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: silverPrices.map(s => (s/1000).toFixed(0) + 'k'),
@@ -1131,13 +1243,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { size: 12 }
-                            }
+                            display: false
                         },
                         tooltip: {
                             mode: 'index',
@@ -1167,6 +1273,21 @@
                     }
                 }
             });
+
+            // 自定义图例，避免占用图表绘图区高度
+            const legendContainer = document.getElementById('silver-trend-legend');
+            if (legendContainer) {
+                legendContainer.innerHTML = chart.data.datasets.map(ds => {
+                    const color = ds.borderColor || '#3498db';
+                    const isDashed = Array.isArray(ds.borderDash) && ds.borderDash.length > 0;
+                    return `
+                        <div class="chart-legend-item">
+                            <span class="chart-legend-color" style="border-color: ${color}; ${isDashed ? 'border-style: dashed;' : ''}"></span>
+                            <span>${ds.label}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // 更新表格
