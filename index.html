@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>爱旭股份生产成本跟踪</title>
+    <!-- 使用 UMD 版本以提供全局 Chart 对象 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -447,7 +448,14 @@
             <p class="comparison-note">
                 成本对比基准: <span>Topcon183成本指数-半一体化预估 (当前: <span id="smm-baseline">0.84</span> 元/W)</span>
             </p>
-            
+
+            <!-- 爱旭产品成本走势图（放在卡片上方） -->
+            <div class="chart-card" style="margin-top: 16px;">
+                <div class="chart-title">爱旭产品成本走势（基于SMM银价与硅片价格）</div>
+                <div class="chart-container-large"><canvas id="abc-cost-trend-chart"></canvas></div>
+                <p class="chart-note">说明：按每日 SMM 银价与硅片价格，分别计算有银 / 无银 ABC（义乌 / 珠海 / 济南）以及 Topcon 半一体化预估的组件成本走势。</p>
+            </div>
+
             <div class="cost-grid" id="abc-cost-cards"></div>
             
             <!-- 公式展示区域 -->
@@ -906,6 +914,151 @@
             formulaDisplay.classList.add('active');
         }
 
+        // 爱旭产品成本走势图（基于历史银价与硅片价格）
+        function createProductCostTrendChart() {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js 未加载成功，无法渲染爱旭产品成本走势图。');
+                return;
+            }
+
+            const ctx = document.getElementById('abc-cost-trend-chart');
+            if (!ctx) return;
+
+            // 假设 smmData.silver 与 smmData.wafer 日期一一对应，按索引对齐
+            const dates = smmData.silver.map(d => d.date);
+
+            const abcSmbbData = dates.map((_, i) =>
+                productFormulas['abc-smbb'].formula(
+                    smmData.silver[i].price,
+                    smmData.wafer[i].price
+                )
+            );
+
+            const abc0bbData = dates.map((_, i) =>
+                productFormulas['abc-0bb'].formula(
+                    smmData.silver[i].price,
+                    smmData.wafer[i].price
+                )
+            );
+
+            const abcSilverfreeZhData = dates.map((_, i) =>
+                productFormulas['abc-silverfree-zh'].formula(
+                    smmData.silver[i].price,
+                    smmData.wafer[i].price
+                )
+            );
+
+            const abcSilverfreeJnData = dates.map((_, i) =>
+                productFormulas['abc-silverfree-jn'].formula(
+                    smmData.silver[i].price,
+                    smmData.wafer[i].price
+                )
+            );
+
+            const topconSemiEstData = dates.map((_, i) =>
+                productFormulas['topcon-semi-est'].formula(
+                    smmData.silver[i].price,
+                    smmData.wafer[i].price
+                )
+            );
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates.map(d => d.substring(5)), // 显示 MM-DD
+                    datasets: [
+                        {
+                            label: '有银ABC-SMBB（义乌）',
+                            data: abcSmbbData,
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            pointRadius: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '有银ABC-0BB（义乌）',
+                            data: abc0bbData,
+                            borderColor: '#3498db',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            pointRadius: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '无银ABC（珠海）',
+                            data: abcSilverfreeZhData,
+                            borderColor: '#27ae60',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            pointRadius: 2,
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        },
+                        {
+                            label: '无银ABC（济南）',
+                            data: abcSilverfreeJnData,
+                            borderColor: '#9b59b6',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            pointRadius: 2,
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        },
+                        {
+                            label: 'Topcon183成本指数-半一体化预估',
+                            data: topconSemiEstData,
+                            borderColor: '#f39c12',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            pointRadius: 2,
+                            borderWidth: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                title: (items) => '日期: ' + items[0].label,
+                                label: (context) => context.dataset.label + ': ' + context.parsed.y.toFixed(4) + ' 元/W'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '日期', font: { weight: 'bold' } },
+                            grid: { display: false },
+                            ticks: { color: '#7f8c8d' }
+                        },
+                        y: {
+                            title: { display: true, text: '组件成本 (元/W)', font: { weight: 'bold' } },
+                            grid: { color: 'rgba(128,128,128,0.1)' },
+                            ticks: { color: '#7f8c8d' }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        }
+
         // 创建银价变化走势图
         function createSilverTrendChart() {
             const ctx = document.getElementById('silver-trend-chart');
@@ -1050,6 +1203,7 @@
         // 初始化
         updateCostCards();
         updateTables();
+        createProductCostTrendChart();
         createSilverTrendChart();
 
         // 创建所有图表
