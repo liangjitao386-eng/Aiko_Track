@@ -3,6 +3,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>爱旭股份生产成本跟踪</title>
+    <!-- 微信/社交分享卡片 -->
+    <meta property="og:image" content="https://aikotrack.site/aikologo.jpg">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+    <meta property="og:description" content="无银，为零碳时代带来澎湃动力">
     <!-- 使用 UMD 版本以提供全局 Chart 对象 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -90,6 +95,38 @@
             padding-bottom: 12px;
             border-bottom: 3px solid var(--accent-color);
             display: inline-block;
+        }
+
+        /* 爱旭产品成本预估区域右侧大标题 */
+        .section-title-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .section-title-highlight {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-align: right;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .section-title-highlight-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .section-title-highlight-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-top: 4px;
         }
 
         /* 成本汇总表 */
@@ -367,6 +404,22 @@
                 font-size: 18px;
             }
 
+            .section-title-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-title-highlight {
+                font-size: 14px;
+                text-align: left;
+                white-space: normal;
+                align-items: flex-start;
+            }
+
+            .section-title-highlight-price {
+                font-size: 18px;
+            }
+
             .charts-grid,
             .cost-grid {
                 grid-template-columns: 1fr;
@@ -516,7 +569,13 @@
 
         <!-- 爱旭成本预估 -->
         <section class="section">
-            <h2 class="section-title">爱旭产品成本预估</h2>
+            <div class="section-title-row">
+                <h2 class="section-title">爱旭产品成本预估</h2>
+                <div class="section-title-highlight">
+                    <span class="section-title-highlight-label">无银ABC对比主流Topcon</span>
+                    <span class="section-title-highlight-price" id="abc-zh-vs-topcon-price">—</span>
+                </div>
+            </div>
             
             <div class="price-params">
                 <div class="price-param">
@@ -983,6 +1042,20 @@
             // 使用 Topcon183成本指数-半一体化预估 作为对比基准
             const topconSemiEstPrice = productFormulas['topcon-semi-est'].formula(silverPrice, waferPrice);
             document.getElementById('smm-baseline').textContent = topconSemiEstPrice.toFixed(3);
+
+            // 右侧大字：无银ABC（珠海）对比 Topcon 的价格（差价）
+            const abcZhCost = productFormulas['abc-silverfree-zh'].formula(silverPrice, waferPrice);
+            const diffZh = abcZhCost - topconSemiEstPrice;
+            const priceEl = document.getElementById('abc-zh-vs-topcon-price');
+            if (priceEl) {
+                if (diffZh <= 0) {
+                    priceEl.textContent = '成本优势：- ' + (-diffZh).toFixed(3) + ' 元/W';
+                    priceEl.style.color = 'var(--success-color)';
+                } else {
+                    priceEl.textContent = '成本劣势：+ ' + diffZh.toFixed(3) + ' 元/W';
+                    priceEl.style.color = 'var(--danger-color)';
+                }
+            }
             
             const baselineKey = 'topcon-semi-est';
             const products = [
