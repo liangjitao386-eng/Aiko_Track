@@ -69,6 +69,16 @@
             background-clip: text;
         }
 
+        .logo-update {
+            display: block;
+            margin-top: 6px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            background: none;
+            background-clip: unset;
+        }
+
         .theme-toggle {
             display: flex;
             align-items: center;
@@ -97,16 +107,16 @@
             display: inline-block;
         }
 
-        /* 爱旭产品成本预估区域右侧大标题 */
+        /* 爱旭产品成本预估区域右侧大标题（红框大小） */
         .section-title-row {
             display: flex;
-            align-items: flex-end;
+            align-items: stretch;
             justify-content: space-between;
-            gap: 16px;
+            gap: 24px;
         }
 
         .section-title-highlight {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--accent-color);
             text-align: right;
@@ -114,19 +124,27 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
+            justify-content: center;
+            min-width: 280px;
+            padding: 20px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
         }
 
         .section-title-highlight-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
         }
 
         .section-title-highlight-price {
-            font-size: 22px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--success-color);
-            margin-top: 4px;
+            margin-top: 12px;
+            letter-spacing: 0.02em;
         }
 
         /* 成本汇总表 */
@@ -346,6 +364,7 @@
         .price-params {
             display: flex;
             gap: 24px;
+            margin-top: 24px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
@@ -406,18 +425,23 @@
 
             .section-title-row {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
             }
 
             .section-title-highlight {
-                font-size: 14px;
+                min-width: 0;
+                padding: 16px 20px;
                 text-align: left;
                 white-space: normal;
                 align-items: flex-start;
             }
 
+            .section-title-highlight-label {
+                font-size: 16px;
+            }
+
             .section-title-highlight-price {
-                font-size: 18px;
+                font-size: 24px;
             }
 
             .charts-grid,
@@ -531,6 +555,11 @@
             margin-top: 40px;
         }
 
+        footer .site-pv {
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
         .card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -561,7 +590,10 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">爱旭股份生产成本跟踪 - 数据更新时间: 2026-02-09 (基础数据源SMM)</div>
+            <div class="logo">
+                爱旭股份生产成本跟踪<br>
+                <span class="logo-update">数据更新时间: 2026-02-09 (基础数据源SMM)</span>
+            </div>
             <div class="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-text">🌙 切换主题</span>
             </div>
@@ -739,9 +771,11 @@
         <footer>
             <p>数据来源: 上海有色金属网 (SMM) | 仅供参考，不构成投资建议</p>
             <p>© 2026 爱旭股份生产成本跟踪</p>
+            <p class="site-pv"><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></p>
         </footer>
     </div>
 
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <script>
         // SMM真实数据 (2026-02-09获取)
         const smmData = {
