@@ -564,7 +564,7 @@
             align-items: flex-start;
             justify-content: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 560px;
             padding: 20px 24px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -580,9 +580,17 @@
         }
 
         .section-title-highlight-price {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--success-color);
+            margin-top: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .section-title-highlight-sub {
+            display: block;
+            font-size: 28px;
+            font-weight: 700;
             margin-top: 12px;
             letter-spacing: 0.02em;
         }
@@ -883,6 +891,10 @@
                 font-size: 24px;
             }
 
+            .section-title-highlight-sub {
+                font-size: 24px;
+            }
+
             .charts-grid,
             .cost-grid {
                 grid-template-columns: 1fr;
@@ -1180,8 +1192,10 @@
         <!-- 爱旭成本预估 -->
         <section class="section">
             <div class="section-title-highlight">
-                <span class="section-title-highlight-label">无银ABC对比主流Topcon</span>
+                <span class="section-title-highlight-label">无银ABC(铜电镀) VS Topcon(SMBB)</span>
                 <span class="section-title-highlight-price" id="abc-zh-vs-topcon-price">—</span>
+                <span class="section-title-highlight-sub" id="sale-price-advantage">国内售价优势：—</span>
+                <span class="section-title-highlight-sub" id="comprehensive-advantage">国内综合优势：—</span>
             </div>
             
             <div class="price-params">
@@ -1196,7 +1210,7 @@
             </div>
             
             <p class="comparison-note">
-                成本对比基准: <span>Topcon183成本指数-半一体化 (当前: <span id="smm-baseline">0.84</span> 元/W)</span>
+                对比基准: <span>Topcon183成本指数-半一体化 (当前生产成本: <span id="smm-baseline">0.84</span> 元/W)</span>
             </p>
 
             <!-- 爱旭产品成本走势图 -->
@@ -1743,11 +1757,39 @@
             const priceEl = document.getElementById('abc-zh-vs-topcon-price');
             if (priceEl) {
                 if (diffZh <= 0) {
-                    priceEl.textContent = '成本优势：- ' + (-diffZh).toFixed(3) ;
+                    priceEl.textContent = '生产成本优势：- ' + (-diffZh).toFixed(3) + '元/W';
                     priceEl.style.color = 'var(--success-color)';
                 } else {
-                    priceEl.textContent = '成本劣势：+ ' + diffZh.toFixed(3);
+                    priceEl.textContent = '生产成本劣势：+ ' + diffZh.toFixed(3) + '元/W';
                     priceEl.style.color = 'var(--danger-color)';
+                }
+            }
+
+            // 售价优势：BC组件-210R(分布式) - Topcon组件-182mm(分布式)
+            const bcModulePrice = smmData.bcModule[smmData.bcModule.length - 1].price;
+            const topconDomesticPrice = smmData.topconDomestic[smmData.topconDomestic.length - 1].price;
+            const salePriceAdvantage = bcModulePrice - topconDomesticPrice;
+            const salePriceEl = document.getElementById('sale-price-advantage');
+            if (salePriceEl) {
+                if (salePriceAdvantage >= 0) {
+                    salePriceEl.textContent = '国内售价优势：+ ' + salePriceAdvantage.toFixed(3) + '元/W';
+                    salePriceEl.style.color = 'var(--danger-color)';
+                } else {
+                    salePriceEl.textContent = '国内售价劣势：' + salePriceAdvantage.toFixed(3) + '元/W';
+                    salePriceEl.style.color = 'var(--success-color)';
+                }
+            }
+
+            // 综合优势：售价优势 + 成本优(劣)势
+            const comprehensiveAdvantage = salePriceAdvantage - diffZh;
+            const compEl = document.getElementById('comprehensive-advantage');
+            if (compEl) {
+                if (comprehensiveAdvantage >= 0) {
+                    compEl.textContent = '国内综合优势：+ ' + comprehensiveAdvantage.toFixed(3) + '元/W';
+                    compEl.style.color = 'var(--danger-color)';
+                } else {
+                    compEl.textContent = '国内综合劣势：' + comprehensiveAdvantage.toFixed(3) + '元/W';
+                    compEl.style.color = 'var(--success-color)';
                 }
             }
             
