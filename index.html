@@ -7,9 +7,9 @@
     <meta property="og:image" content="https://aikotrack.site/aikologo.jpg">
     <meta property="og:image:width" content="300">
     <meta property="og:image:height" content="300">
-    <meta property="og:description" content="无银，为零碳时代带来澎湃动力">
-    <!-- 使用 UMD 版本以提供全局 Chart 对象 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta property="og:description" content="新春快乐！&#10;无银，为零碳时代带来澎湃动力">
+    <!-- 使用 UMD 版本以提供全局 Chart 对象；主 CDN 失败时用备选 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://unpkg.com/chart.js';s.onload=function(){if(window.__chartFallbackOnLoad)window.__chartFallbackOnLoad();};document.head.appendChild(s);"></script>
     <style>
         /* BB-8 Toggle Styles - From Uiverse.io by Galahhad */
         .bb8-toggle {
@@ -1140,7 +1140,7 @@
         <header>
             <div class="logo">
                 爱旭股份生产成本跟踪<br>
-                <span class="logo-update">数据更新时间: 2026-02-09 (基础数据源SMM)</span>
+                <span class="logo-update">数据更新时间: 2026-02-13 (基础数据源SMM)</span>
             </div>
             <label class="bb8-toggle">
                 <input class="bb8-toggle__checkbox" type="checkbox" id="theme-checkbox">
@@ -1196,7 +1196,7 @@
             </div>
             
             <p class="comparison-note">
-                成本对比基准: <span>Topcon183成本指数-半一体化预估 (当前: <span id="smm-baseline">0.84</span> 元/W)</span>
+                成本对比基准: <span>Topcon183成本指数-半一体化 (当前: <span id="smm-baseline">0.84</span> 元/W)</span>
             </p>
 
             <!-- 爱旭产品成本走势图 -->
@@ -1388,7 +1388,7 @@
             </div>
         </section>
 
-        <div class="update-time">数据更新时间: 2026-02-09 (SMM)</div>
+        <div class="update-time">数据更新时间: 2026-02-13 (SMM)</div>
 
         <footer>
             <p>数据来源: 上海有色金属网 (SMM) | 仅供参考，不构成投资建议</p>
@@ -1397,70 +1397,78 @@
         </footer>
     </div>
 
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <script>
-        // SMM真实数据 (2026-02-09获取)
+        // SMM真实数据 (2026-02-14获取)
         const smmData = {
             // 原材料
             silver: [
-                {date: "2026-01-05", price: 17520.9951}, {date: "2026-01-06", price: 18250.8491},
-                {date: "2026-01-07", price: 18786.7419}, {date: "2026-01-08", price: 18574.2844},
-                {date: "2026-01-09", price: 17992.4008}, {date: "2026-01-12", price: 19671.5649},
-                {date: "2026-01-13", price: 20066.4859}, {date: "2026-01-14", price: 21808.1375},
-                {date: "2026-01-15", price: 21378.7234}, {date: "2026-01-16", price: 21843.6304},
-                {date: "2026-01-19", price: 21991.1009}, {date: "2026-01-20", price: 22141.0709},
-                {date: "2026-01-21", price: 21933.1125}, {date: "2026-01-22", price: 21812.6366},
-                {date: "2026-01-23", price: 23679.2632}, {date: "2026-01-26", price: 27104.578},
-                {date: "2026-01-27", price: 27444.0101}, {date: "2026-01-28", price: 27729.453},
-                {date: "2026-01-29", price: 28633.7721}, {date: "2026-01-30", price: 28172.8643},
-                {date: "2026-02-02", price: 23572.7845}, {date: "2026-02-03", price: 21774.1443},
-                {date: "2026-02-04", price: 23360.327}, {date: "2026-02-05", price: 23988.2014},
-                {date: "2026-02-06", price: 19580.0832}, {date: "2026-02-09", price: 20992}
+                {date: "2026-01-05", price: 17528.0049}, {date: "2026-01-06", price: 18258.1509},
+                {date: "2026-01-07", price: 18794.2581}, {date: "2026-01-08", price: 18581.7156},
+                {date: "2026-01-09", price: 17999.5992}, {date: "2026-01-12", price: 19679.4351},
+                {date: "2026-01-13", price: 20074.5141}, {date: "2026-01-14", price: 21816.8625},
+                {date: "2026-01-15", price: 21387.2766}, {date: "2026-01-16", price: 21852.3696},
+                {date: "2026-01-19", price: 21999.8991}, {date: "2026-01-20", price: 22149.9291},
+                {date: "2026-01-21", price: 21941.8875}, {date: "2026-01-22", price: 21821.3634},
+                {date: "2026-01-23", price: 23688.7368}, {date: "2026-01-26", price: 27115.422},
+                {date: "2026-01-27", price: 27454.9899}, {date: "2026-01-28", price: 27740.547},
+                {date: "2026-01-29", price: 28645.2279}, {date: "2026-01-30", price: 28184.1357},
+                {date: "2026-02-02", price: 23582.2155}, {date: "2026-02-03", price: 21782.8557},
+                {date: "2026-02-04", price: 23369.673}, {date: "2026-02-05", price: 23997.7986},
+                {date: "2026-02-06", price: 19587.9168}, {date: "2026-02-09", price: 20996.1984},
+                {date: "2026-02-10", price: 20137.0266}, {date: "2026-02-11", price: 19684.9362},
+                {date: "2026-02-12", price: 19829.9652}, {date: "2026-02-13", price: 18624}
             ],
             wafer: [
-                {date: "2026-01-05", price: 1.374725}, {date: "2026-01-06", price: 1.374725},
-                {date: "2026-01-07", price: 1.374725}, {date: "2026-01-08", price: 1.389722},
-                {date: "2026-01-09", price: 1.389722}, {date: "2026-01-12", price: 1.389722},
-                {date: "2026-01-13", price: 1.389722}, {date: "2026-01-14", price: 1.389722},
-                {date: "2026-01-15", price: 1.389722}, {date: "2026-01-16", price: 1.389722},
-                {date: "2026-01-19", price: 1.389722}, {date: "2026-01-20", price: 1.389722},
-                {date: "2026-01-21", price: 1.34973}, {date: "2026-01-22", price: 1.34973},
-                {date: "2026-01-23", price: 1.324735}, {date: "2026-01-26", price: 1.324735},
-                {date: "2026-01-27", price: 1.29974}, {date: "2026-01-28", price: 1.29974},
-                {date: "2026-01-29", price: 1.224755}, {date: "2026-01-30", price: 1.224755},
-                {date: "2026-02-02", price: 1.224755}, {date: "2026-02-03", price: 1.224755},
-                {date: "2026-02-04", price: 1.224755}, {date: "2026-02-05", price: 1.224755},
-                {date: "2026-02-06", price: 1.224755}, {date: "2026-02-09", price: 1.175}
+                {date: "2026-01-05", price: 1.3748625}, {date: "2026-01-06", price: 1.3748625},
+                {date: "2026-01-07", price: 1.3748625}, {date: "2026-01-08", price: 1.389861},
+                {date: "2026-01-09", price: 1.389861}, {date: "2026-01-12", price: 1.389861},
+                {date: "2026-01-13", price: 1.389861}, {date: "2026-01-14", price: 1.389861},
+                {date: "2026-01-15", price: 1.389861}, {date: "2026-01-16", price: 1.389861},
+                {date: "2026-01-19", price: 1.389861}, {date: "2026-01-20", price: 1.389861},
+                {date: "2026-01-21", price: 1.349865}, {date: "2026-01-22", price: 1.349865},
+                {date: "2026-01-23", price: 1.3248675}, {date: "2026-01-26", price: 1.3248675},
+                {date: "2026-01-27", price: 1.29987}, {date: "2026-01-28", price: 1.29987},
+                {date: "2026-01-29", price: 1.2248775}, {date: "2026-01-30", price: 1.2248775},
+                {date: "2026-02-02", price: 1.2248775}, {date: "2026-02-03", price: 1.2248775},
+                {date: "2026-02-04", price: 1.2248775}, {date: "2026-02-05", price: 1.2248775},
+                {date: "2026-02-06", price: 1.2248775}, {date: "2026-02-09", price: 1.1748825},
+                {date: "2026-02-10", price: 1.1748825}, {date: "2026-02-11", price: 1.1248875},
+                {date: "2026-02-12", price: 1.1248875}, {date: "2026-02-13", price: 1.125}
             ],
             silicon: [
-                {date: "2026-01-05", price: 53.164683}, {date: "2026-01-06", price: 53.384661},
-                {date: "2026-01-07", price: 53.384661}, {date: "2026-01-08", price: 55.314468},
-                {date: "2026-01-09", price: 54.854514}, {date: "2026-01-12", price: 54.854514},
-                {date: "2026-01-13", price: 54.5255469}, {date: "2026-01-14", price: 54.5255469},
-                {date: "2026-01-15", price: 54.5735421}, {date: "2026-01-16", price: 54.6435351},
-                {date: "2026-01-19", price: 54.7585236}, {date: "2026-01-20", price: 54.9275067},
-                {date: "2026-01-21", price: 54.134586}, {date: "2026-01-22", price: 53.4586536},
-                {date: "2026-01-23", price: 53.4586536}, {date: "2026-01-26", price: 53.3866608},
-                {date: "2026-01-27", price: 51.944805}, {date: "2026-01-28", price: 51.864813},
-                {date: "2026-01-29", price: 51.314868}, {date: "2026-01-30", price: 50.204979},
-                {date: "2026-02-02", price: 50.19498}, {date: "2026-02-03", price: 52.444755},
-                {date: "2026-02-04", price: 52.49475}, {date: "2026-02-05", price: 52.5927402},
-                {date: "2026-02-06", price: 52.5717423}, {date: "2026-02-09", price: 52.66}
+                {date: "2026-01-05", price: 53.180634}, {date: "2026-01-06", price: 53.400678},
+                {date: "2026-01-07", price: 53.400678}, {date: "2026-01-08", price: 55.331064},
+                {date: "2026-01-09", price: 54.870972}, {date: "2026-01-12", price: 54.870972},
+                {date: "2026-01-13", price: 54.5419062}, {date: "2026-01-14", price: 54.5419062},
+                {date: "2026-01-15", price: 54.5899158}, {date: "2026-01-16", price: 54.6599298},
+                {date: "2026-01-19", price: 54.7749528}, {date: "2026-01-20", price: 54.9439866},
+                {date: "2026-01-21", price: 54.150828}, {date: "2026-01-22", price: 53.4746928},
+                {date: "2026-01-23", price: 53.4746928}, {date: "2026-01-26", price: 53.4026784},
+                {date: "2026-01-27", price: 51.96039}, {date: "2026-01-28", price: 51.880374},
+                {date: "2026-01-29", price: 51.330264}, {date: "2026-01-30", price: 50.220042},
+                {date: "2026-02-02", price: 50.21004}, {date: "2026-02-03", price: 52.46049},
+                {date: "2026-02-04", price: 52.5105}, {date: "2026-02-05", price: 52.6085196},
+                {date: "2026-02-06", price: 52.5875154}, {date: "2026-02-09", price: 52.670532},
+                {date: "2026-02-10", price: 52.700538}, {date: "2026-02-11", price: 52.700538},
+                {date: "2026-02-12", price: 52.380474}, {date: "2026-02-13", price: 52.37}
             ],
             cell: [
-                {date: "2026-01-05", price: 0.389922}, {date: "2026-01-06", price: 0.384923},
-                {date: "2026-01-07", price: 0.384923}, {date: "2026-01-08", price: 0.389922},
-                {date: "2026-01-09", price: 0.389922}, {date: "2026-01-12", price: 0.389922},
-                {date: "2026-01-13", price: 0.394921}, {date: "2026-01-14", price: 0.394921},
-                {date: "2026-01-15", price: 0.394921}, {date: "2026-01-16", price: 0.404919},
-                {date: "2026-01-19", price: 0.409918}, {date: "2026-01-20", price: 0.409918},
-                {date: "2026-01-21", price: 0.409918}, {date: "2026-01-22", price: 0.409918},
-                {date: "2026-01-23", price: 0.414917}, {date: "2026-01-26", price: 0.434913},
-                {date: "2026-01-27", price: 0.434913}, {date: "2026-01-28", price: 0.434913},
-                {date: "2026-01-29", price: 0.439912}, {date: "2026-01-30", price: 0.439912},
-                {date: "2026-02-02", price: 0.439912}, {date: "2026-02-03", price: 0.439912},
-                {date: "2026-02-04", price: 0.434913}, {date: "2026-02-05", price: 0.439912},
-                {date: "2026-02-06", price: 0.439912}, {date: "2026-02-09", price: 0.44}
+                {date: "2026-01-05", price: 0.39}, {date: "2026-01-06", price: 0.385},
+                {date: "2026-01-07", price: 0.385}, {date: "2026-01-08", price: 0.39},
+                {date: "2026-01-09", price: 0.39}, {date: "2026-01-12", price: 0.39},
+                {date: "2026-01-13", price: 0.395}, {date: "2026-01-14", price: 0.395},
+                {date: "2026-01-15", price: 0.395}, {date: "2026-01-16", price: 0.405},
+                {date: "2026-01-19", price: 0.41}, {date: "2026-01-20", price: 0.41},
+                {date: "2026-01-21", price: 0.41}, {date: "2026-01-22", price: 0.41},
+                {date: "2026-01-23", price: 0.415}, {date: "2026-01-26", price: 0.435},
+                {date: "2026-01-27", price: 0.435}, {date: "2026-01-28", price: 0.435},
+                {date: "2026-01-29", price: 0.44}, {date: "2026-01-30", price: 0.44},
+                {date: "2026-02-02", price: 0.44}, {date: "2026-02-03", price: 0.44},
+                {date: "2026-02-04", price: 0.435}, {date: "2026-02-05", price: 0.44},
+                {date: "2026-02-06", price: 0.44}, {date: "2026-02-09", price: 0.44},
+                {date: "2026-02-10", price: 0.44}, {date: "2026-02-11", price: 0.44},
+                {date: "2026-02-12", price: 0.44}, {date: "2026-02-13", price: 0.44}
             ],
             // 组件
             bcModule: [
@@ -1472,99 +1480,111 @@
                 {date: "2026-01-19", price: 0.79742025}, {date: "2026-01-20", price: 0.80241975},
                 {date: "2026-01-21", price: 0.80241975}, {date: "2026-01-22", price: 0.80241975},
                 {date: "2026-01-23", price: 0.80241975}, {date: "2026-01-26", price: 0.80241975},
-                {date: "2026-01-27", price: 0.8099190}, {date: "2026-01-28", price: 0.8099190},
+                {date: "2026-01-27", price: 0.809919}, {date: "2026-01-28", price: 0.809919},
                 {date: "2026-01-29", price: 0.8149185}, {date: "2026-01-30", price: 0.8149185},
                 {date: "2026-02-02", price: 0.8149185}, {date: "2026-02-03", price: 0.8149185},
-                {date: "2026-02-04", price: 0.8199180}, {date: "2026-02-05", price: 0.8199180},
-                {date: "2026-02-06", price: 0.8199180}, {date: "2026-02-09", price: 0.82}
+                {date: "2026-02-04", price: 0.819918}, {date: "2026-02-05", price: 0.819918},
+                {date: "2026-02-06", price: 0.819918}, {date: "2026-02-09", price: 0.819918},
+                {date: "2026-02-10", price: 0.819918}, {date: "2026-02-11", price: 0.819918},
+                {date: "2026-02-12", price: 0.819918}, {date: "2026-02-13", price: 0.82}
             ],
             topconDomestic: [
-                {date: "2026-01-05", price: 0.6873625}, {date: "2026-01-06", price: 0.6953609},
-                {date: "2026-01-07", price: 0.6963607}, {date: "2026-01-08", price: 0.6968606},
-                {date: "2026-01-09", price: 0.6968606}, {date: "2026-01-12", price: 0.7018596},
-                {date: "2026-01-13", price: 0.7018596}, {date: "2026-01-14", price: 0.7193561},
-                {date: "2026-01-15", price: 0.7283543}, {date: "2026-01-16", price: 0.7313537},
-                {date: "2026-01-19", price: 0.7318536}, {date: "2026-01-20", price: 0.7338532},
-                {date: "2026-01-21", price: 0.7343531}, {date: "2026-01-22", price: 0.7343531},
-                {date: "2026-01-23", price: 0.7343531}, {date: "2026-01-26", price: 0.7343531},
-                {date: "2026-01-27", price: 0.7343531}, {date: "2026-01-28", price: 0.7343531},
-                {date: "2026-01-29", price: 0.734853}, {date: "2026-01-30", price: 0.734853},
-                {date: "2026-02-02", price: 0.734853}, {date: "2026-02-03", price: 0.734853},
-                {date: "2026-02-04", price: 0.7343531}, {date: "2026-02-05", price: 0.7343531},
-                {date: "2026-02-06", price: 0.7343531}, {date: "2026-02-09", price: 0.7345}
+                {date: "2026-01-05", price: 0.68743125}, {date: "2026-01-06", price: 0.69543045},
+                {date: "2026-01-07", price: 0.69643035}, {date: "2026-01-08", price: 0.6969303},
+                {date: "2026-01-09", price: 0.6969303}, {date: "2026-01-12", price: 0.7019298},
+                {date: "2026-01-13", price: 0.7019298}, {date: "2026-01-14", price: 0.71942805},
+                {date: "2026-01-15", price: 0.72842715}, {date: "2026-01-16", price: 0.73142685},
+                {date: "2026-01-19", price: 0.7319268}, {date: "2026-01-20", price: 0.7339266},
+                {date: "2026-01-21", price: 0.73442655}, {date: "2026-01-22", price: 0.73442655},
+                {date: "2026-01-23", price: 0.73442655}, {date: "2026-01-26", price: 0.73442655},
+                {date: "2026-01-27", price: 0.73442655}, {date: "2026-01-28", price: 0.73442655},
+                {date: "2026-01-29", price: 0.7349265}, {date: "2026-01-30", price: 0.7349265},
+                {date: "2026-02-02", price: 0.7349265}, {date: "2026-02-03", price: 0.7349265},
+                {date: "2026-02-04", price: 0.73442655}, {date: "2026-02-05", price: 0.73442655},
+                {date: "2026-02-06", price: 0.73442655}, {date: "2026-02-09", price: 0.73442655},
+                {date: "2026-02-10", price: 0.7339266}, {date: "2026-02-11", price: 0.7339266},
+                {date: "2026-02-12", price: 0.7339266}, {date: "2026-02-13", price: 0.734}
             ],
             hjtModule: [
-                {date: "2026-01-05", price: 0.7313537}, {date: "2026-01-06", price: 0.744851},
-                {date: "2026-01-07", price: 0.744851}, {date: "2026-01-08", price: 0.744851},
-                {date: "2026-01-09", price: 0.744851}, {date: "2026-01-12", price: 0.7468506},
-                {date: "2026-01-13", price: 0.7468506}, {date: "2026-01-14", price: 0.74985},
-                {date: "2026-01-15", price: 0.7513497}, {date: "2026-01-16", price: 0.7668466},
-                {date: "2026-01-19", price: 0.7668466}, {date: "2026-01-20", price: 0.7683463},
-                {date: "2026-01-21", price: 0.7683463}, {date: "2026-01-22", price: 0.7683463},
-                {date: "2026-01-23", price: 0.7683463}, {date: "2026-01-26", price: 0.7683463},
-                {date: "2026-01-27", price: 0.7783443}, {date: "2026-01-28", price: 0.779844},
-                {date: "2026-01-29", price: 0.779844}, {date: "2026-01-30", price: 0.779844},
-                {date: "2026-02-02", price: 0.779844}, {date: "2026-02-03", price: 0.779844},
-                {date: "2026-02-04", price: 0.7818436}, {date: "2026-02-05", price: 0.7818436},
-                {date: "2026-02-06", price: 0.7818436}, {date: "2026-02-09", price: 0.782}
+                {date: "2026-01-05", price: 0.73142685}, {date: "2026-01-06", price: 0.7449255},
+                {date: "2026-01-07", price: 0.7449255}, {date: "2026-01-08", price: 0.7449255},
+                {date: "2026-01-09", price: 0.7449255}, {date: "2026-01-12", price: 0.7469253},
+                {date: "2026-01-13", price: 0.7469253}, {date: "2026-01-14", price: 0.749925},
+                {date: "2026-01-15", price: 0.75142485}, {date: "2026-01-16", price: 0.7669233},
+                {date: "2026-01-19", price: 0.7669233}, {date: "2026-01-20", price: 0.76842315},
+                {date: "2026-01-21", price: 0.76842315}, {date: "2026-01-22", price: 0.76842315},
+                {date: "2026-01-23", price: 0.76842315}, {date: "2026-01-26", price: 0.76842315},
+                {date: "2026-01-27", price: 0.77842215}, {date: "2026-01-28", price: 0.779922},
+                {date: "2026-01-29", price: 0.779922}, {date: "2026-01-30", price: 0.779922},
+                {date: "2026-02-02", price: 0.779922}, {date: "2026-02-03", price: 0.779922},
+                {date: "2026-02-04", price: 0.7819218}, {date: "2026-02-05", price: 0.7819218},
+                {date: "2026-02-06", price: 0.7819218}, {date: "2026-02-09", price: 0.7819218},
+                {date: "2026-02-10", price: 0.7819218}, {date: "2026-02-11", price: 0.7819218},
+                {date: "2026-02-12", price: 0.7819218}, {date: "2026-02-13", price: 0.782}
             ],
             topconFob182: [
-                {date: "2026-01-05", price: 0.0869913}, {date: "2026-01-06", price: 0.08749125},
-                {date: "2026-01-07", price: 0.0879912}, {date: "2026-01-08", price: 0.08849115},
-                {date: "2026-01-09", price: 0.08849115}, {date: "2026-01-12", price: 0.09149085},
-                {date: "2026-01-13", price: 0.09249075}, {date: "2026-01-14", price: 0.09349065},
-                {date: "2026-01-15", price: 0.0949905}, {date: "2026-01-16", price: 0.0949905},
-                {date: "2026-01-19", price: 0.0969903}, {date: "2026-01-20", price: 0.0979902},
-                {date: "2026-01-21", price: 0.0979902}, {date: "2026-01-22", price: 0.0979902},
-                {date: "2026-01-23", price: 0.0979902}, {date: "2026-01-26", price: 0.09849015},
-                {date: "2026-01-27", price: 0.09849015}, {date: "2026-01-28", price: 0.09999},
-                {date: "2026-01-29", price: 0.10048995}, {date: "2026-01-30", price: 0.10048995},
-                {date: "2026-02-02", price: 0.10048995}, {date: "2026-02-03", price: 0.10048995},
-                {date: "2026-02-04", price: 0.1019898}, {date: "2026-02-05", price: 0.1029897},
-                {date: "2026-02-06", price: 0.1029897}, {date: "2026-02-09", price: 0.103}
+                {date: "2026-01-05", price: 0.0870087}, {date: "2026-01-06", price: 0.08750875},
+                {date: "2026-01-07", price: 0.0880088}, {date: "2026-01-08", price: 0.08850885},
+                {date: "2026-01-09", price: 0.08850885}, {date: "2026-01-12", price: 0.09150915},
+                {date: "2026-01-13", price: 0.09250925}, {date: "2026-01-14", price: 0.09350935},
+                {date: "2026-01-15", price: 0.0950095}, {date: "2026-01-16", price: 0.0950095},
+                {date: "2026-01-19", price: 0.0970097}, {date: "2026-01-20", price: 0.0980098},
+                {date: "2026-01-21", price: 0.0980098}, {date: "2026-01-22", price: 0.0980098},
+                {date: "2026-01-23", price: 0.0980098}, {date: "2026-01-26", price: 0.09850985},
+                {date: "2026-01-27", price: 0.09850985}, {date: "2026-01-28", price: 0.10001},
+                {date: "2026-01-29", price: 0.10051005}, {date: "2026-01-30", price: 0.10051005},
+                {date: "2026-02-02", price: 0.10051005}, {date: "2026-02-03", price: 0.10051005},
+                {date: "2026-02-04", price: 0.1020102}, {date: "2026-02-05", price: 0.1030103},
+                {date: "2026-02-06", price: 0.1030103}, {date: "2026-02-09", price: 0.1030103},
+                {date: "2026-02-10", price: 0.1030103}, {date: "2026-02-11", price: 0.10451045},
+                {date: "2026-02-12", price: 0.10451045}, {date: "2026-02-13", price: 0.1045}
             ],
             topconFob210: [
-                {date: "2026-01-05", price: 0.0894821}, {date: "2026-01-06", price: 0.0914817},
-                {date: "2026-01-07", price: 0.0924815}, {date: "2026-01-08", price: 0.0929814},
-                {date: "2026-01-09", price: 0.0929814}, {date: "2026-01-12", price: 0.0969806},
-                {date: "2026-01-13", price: 0.0989802}, {date: "2026-01-14", price: 0.09998},
-                {date: "2026-01-15", price: 0.1014797}, {date: "2026-01-16", price: 0.1014797},
-                {date: "2026-01-19", price: 0.1024795}, {date: "2026-01-20", price: 0.1024795},
-                {date: "2026-01-21", price: 0.1024795}, {date: "2026-01-22", price: 0.1024795},
-                {date: "2026-01-23", price: 0.1024795}, {date: "2026-01-26", price: 0.1024795},
-                {date: "2026-01-27", price: 0.1024795}, {date: "2026-01-28", price: 0.1039792},
-                {date: "2026-01-29", price: 0.1044791}, {date: "2026-01-30", price: 0.1044791},
-                {date: "2026-02-02", price: 0.1044791}, {date: "2026-02-03", price: 0.1044791},
-                {date: "2026-02-04", price: 0.1064787}, {date: "2026-02-05", price: 0.1074785},
-                {date: "2026-02-06", price: 0.1074785}, {date: "2026-02-09", price: 0.1075}
+                {date: "2026-01-05", price: 0.08950895}, {date: "2026-01-06", price: 0.09150915},
+                {date: "2026-01-07", price: 0.09250925}, {date: "2026-01-08", price: 0.0930093},
+                {date: "2026-01-09", price: 0.0930093}, {date: "2026-01-12", price: 0.0970097},
+                {date: "2026-01-13", price: 0.0990099}, {date: "2026-01-14", price: 0.10001},
+                {date: "2026-01-15", price: 0.10151015}, {date: "2026-01-16", price: 0.10151015},
+                {date: "2026-01-19", price: 0.10251025}, {date: "2026-01-20", price: 0.10251025},
+                {date: "2026-01-21", price: 0.10251025}, {date: "2026-01-22", price: 0.10251025},
+                {date: "2026-01-23", price: 0.10251025}, {date: "2026-01-26", price: 0.10251025},
+                {date: "2026-01-27", price: 0.10251025}, {date: "2026-01-28", price: 0.1040104},
+                {date: "2026-01-29", price: 0.10451045}, {date: "2026-01-30", price: 0.10451045},
+                {date: "2026-02-02", price: 0.10451045}, {date: "2026-02-03", price: 0.10451045},
+                {date: "2026-02-04", price: 0.10651065}, {date: "2026-02-05", price: 0.10751075},
+                {date: "2026-02-06", price: 0.10751075}, {date: "2026-02-09", price: 0.10751075},
+                {date: "2026-02-10", price: 0.10751075}, {date: "2026-02-11", price: 0.1090109},
+                {date: "2026-02-12", price: 0.1090109}, {date: "2026-02-13", price: 0.109}
             ],
             percFob: [
-                {date: "2026-01-05", price: 0.04750475}, {date: "2026-01-06", price: 0.04750475},
-                {date: "2026-01-07", price: 0.04750475}, {date: "2026-01-08", price: 0.04750475},
-                {date: "2026-01-09", price: 0.04750475}, {date: "2026-01-12", price: 0.04750475},
-                {date: "2026-01-13", price: 0.04750475}, {date: "2026-01-14", price: 0.04750475},
-                {date: "2026-01-15", price: 0.04750475}, {date: "2026-01-16", price: 0.04750475},
-                {date: "2026-01-19", price: 0.04850485}, {date: "2026-01-20", price: 0.04850485},
-                {date: "2026-01-21", price: 0.04850485}, {date: "2026-01-22", price: 0.04850485},
-                {date: "2026-01-23", price: 0.04850485}, {date: "2026-01-26", price: 0.04850485},
-                {date: "2026-01-27", price: 0.04850485}, {date: "2026-01-28", price: 0.04850485},
-                {date: "2026-01-29", price: 0.04850485}, {date: "2026-01-30", price: 0.04850485},
-                {date: "2026-02-02", price: 0.04850485}, {date: "2026-02-03", price: 0.04850485},
-                {date: "2026-02-04", price: 0.04850485}, {date: "2026-02-05", price: 0.050005},
-                {date: "2026-02-06", price: 0.050005}, {date: "2026-02-09", price: 0.05}
+                {date: "2026-01-05", price: 0.0474905}, {date: "2026-01-06", price: 0.0474905},
+                {date: "2026-01-07", price: 0.0474905}, {date: "2026-01-08", price: 0.0474905},
+                {date: "2026-01-09", price: 0.0474905}, {date: "2026-01-12", price: 0.0474905},
+                {date: "2026-01-13", price: 0.0474905}, {date: "2026-01-14", price: 0.0474905},
+                {date: "2026-01-15", price: 0.0474905}, {date: "2026-01-16", price: 0.0474905},
+                {date: "2026-01-19", price: 0.0484903}, {date: "2026-01-20", price: 0.0484903},
+                {date: "2026-01-21", price: 0.0484903}, {date: "2026-01-22", price: 0.0484903},
+                {date: "2026-01-23", price: 0.0484903}, {date: "2026-01-26", price: 0.0484903},
+                {date: "2026-01-27", price: 0.0484903}, {date: "2026-01-28", price: 0.0484903},
+                {date: "2026-01-29", price: 0.0484903}, {date: "2026-01-30", price: 0.0484903},
+                {date: "2026-02-02", price: 0.0484903}, {date: "2026-02-03", price: 0.0484903},
+                {date: "2026-02-04", price: 0.0484903}, {date: "2026-02-05", price: 0.04999},
+                {date: "2026-02-06", price: 0.04999}, {date: "2026-02-09", price: 0.04999},
+                {date: "2026-02-10", price: 0.04999}, {date: "2026-02-11", price: 0.04999},
+                {date: "2026-02-12", price: 0.04999}, {date: "2026-02-13", price: 0.05}
             ],
             // 成本指数
             topconIntegrated: [
-                {date: "2025-12-26", price: 0.7840784}, {date: "2025-12-31", price: 0.7860786},
-                {date: "2026-01-09", price: 0.8210821}, {date: "2026-01-16", price: 0.860086},
-                {date: "2026-01-23", price: 0.8710871}, {date: "2026-01-30", price: 0.9260926},
-                {date: "2026-02-06", price: 0.869}
+                {date: "2025-12-26", price: 0.7839216}, {date: "2025-12-31", price: 0.7859214},
+                {date: "2026-01-09", price: 0.8209179}, {date: "2026-01-16", price: 0.859914},
+                {date: "2026-01-23", price: 0.8709129}, {date: "2026-01-30", price: 0.9259074},
+                {date: "2026-02-06", price: 0.8689131}, {date: "2026-02-13", price: 0.841}
             ],
             topconSemi: [
-                {date: "2025-12-26", price: 0.7618476}, {date: "2025-12-31", price: 0.7718456},
-                {date: "2026-01-09", price: 0.8078384}, {date: "2026-01-16", price: 0.8458308},
-                {date: "2026-01-23", price: 0.8538292}, {date: "2026-01-30", price: 0.9038192},
-                {date: "2026-02-06", price: 0.84}
+                {date: "2025-12-26", price: 0.7621524}, {date: "2025-12-31", price: 0.7721544},
+                {date: "2026-01-09", price: 0.8081616}, {date: "2026-01-16", price: 0.8461692},
+                {date: "2026-01-23", price: 0.8541708}, {date: "2026-01-30", price: 0.9041808},
+                {date: "2026-02-06", price: 0.840168}, {date: "2026-02-13", price: 0.802}
             ]
         };
 
@@ -1595,7 +1615,7 @@
                 formulaText: '成本 = 无银ABC（珠海）- 0.03\n     = 0.562 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
             },
             'topcon-semi-est': {
-                name: 'Topcon183成本指数-半一体化预估',
+                name: 'Topcon183成本指数-半一体化',
                 capacity: '行业基准',
                 formula: (silver, wafer) => 0.475 + silver * 0.00000928 + wafer / 8.68,
                 formulaText: '成本 = 0.475 + 银价 × 0.00000928 + 硅片 ÷ 8.68'
@@ -1646,14 +1666,28 @@
             }
         };
 
-        // 创建图表
-        function createChart(canvasId, data, label, color) {
+        // 创建图表（依赖 Chart.js，未加载时直接返回）
+        function createChart(canvasId, data, label, color, unit) {
+            if (typeof Chart === 'undefined') return;
             const ctx = document.getElementById(canvasId);
             if (!ctx || !data || data.length === 0) return;
             
             const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
             gradient.addColorStop(0, color + '40');
             gradient.addColorStop(1, color + '05');
+
+            // 如果有单位，在Y轴标题中显示
+            const yAxisTitle = unit ? `价格 (${unit})` : undefined;
+            const chartConfig = {
+                ...chartOptions,
+                scales: {
+                    ...chartOptions.scales,
+                    y: {
+                        ...chartOptions.scales.y,
+                        title: yAxisTitle ? { display: true, text: yAxisTitle, font: { weight: 'bold' } } : undefined
+                    }
+                }
+            };
 
             const chart = new Chart(ctx, {
                 type: 'line',
@@ -1673,7 +1707,7 @@
                         pointBorderWidth: 2
                     }]
                 },
-                options: chartOptions
+                options: chartConfig
             });
 
             // 移动端：手指松开后立即隐藏浮层
@@ -1860,7 +1894,7 @@
                             borderWidth: 2
                         },
                         {
-                            label: 'Topcon183成本指数-半一体化预估',
+                            label: 'Topcon183成本指数-半一体化',
                             data: topconSemiEstData,
                             borderColor: '#f39c12',
                             backgroundColor: 'transparent',
@@ -1948,7 +1982,7 @@
             
             // 定义要显示的产品（包括Topcon）
             const products = [
-                { key: 'topcon-semi-est', name: 'Topcon183成本指数-半一体化预估', isTopcon: true },
+                { key: 'topcon-semi-est', name: 'Topcon183成本指数-半一体化', isTopcon: true },
                 { key: 'abc-smbb', name: '有银ABC-SMBB（义乌）', isTopcon: false },
                 { key: 'abc-0bb', name: '有银ABC-0BB（义乌）', isTopcon: false },
                 { key: 'abc-silverfree-zh', name: '无银ABC（珠海）', isTopcon: false },
@@ -2004,10 +2038,28 @@
             }).join('');
         }
 
+        // 集中创建所有图表，供首次执行或 Chart.js 备选 CDN 加载后调用
+        function createAllCharts() {
+            createProductCostTrendChart();
+            createChart('silicon-chart', smmData.silicon, 'N型多晶硅', '#e74c3c');
+            createChart('wafer-chart', smmData.wafer, 'N型硅片-183mm', '#3498db');
+            createChart('cell-chart', smmData.cell, '单晶Topcon电池片', '#2ecc71');
+            createChart('silver-chart', smmData.silver, 'Topcon正面细栅银浆', '#9b59b6');
+            createChart('bc-module-chart', smmData.bcModule, 'BC组件-210R', '#e67e22', '元/W');
+            createChart('topcon-domestic-chart', smmData.topconDomestic, 'Topcon组件-182mm', '#1abc9c', '元/W');
+            createChart('hjt-module-chart', smmData.hjtModule, 'HJT组件-210mm', '#f39c12', '元/W');
+            createChart('topcon-fob-182-chart', smmData.topconFob182, 'TOPCon-182mm-FOB', '#3498db', 'USD/W');
+            createChart('topcon-fob-210-chart', smmData.topconFob210, 'TOPCon-210mm-FOB', '#9b59b6', 'USD/W');
+            createChart('perc-fob-chart', smmData.percFob, 'PERC电池片-FOB', '#e74c3c', 'USD/W');
+            createChart('topcon-integrated-chart', smmData.topconIntegrated, 'Topcon一体化', '#2980b9');
+            createChart('topcon-semi-chart', smmData.topconSemi, 'Topcon半一体化', '#27ae60');
+        }
+
         // 初始化
         updateCostCards();
         updateTables();
-        createProductCostTrendChart();
+        if (typeof Chart !== 'undefined') createAllCharts();
+        else window.__chartFallbackOnLoad = createAllCharts;
         
         // 获取当天的银价和硅片价格作为默认值
         const currentSilverPrice = smmData.silver[smmData.silver.length - 1].price;
@@ -2095,19 +2147,6 @@
             });
         }
 
-        // 创建所有图表
-        createChart('silicon-chart', smmData.silicon, 'N型多晶硅', '#e74c3c');
-        createChart('wafer-chart', smmData.wafer, 'N型硅片-183mm', '#3498db');
-        createChart('cell-chart', smmData.cell, '单晶Topcon电池片', '#2ecc71');
-        createChart('silver-chart', smmData.silver, 'Topcon正面细栅银浆', '#9b59b6');
-        createChart('bc-module-chart', smmData.bcModule, 'BC组件-210R', '#e67e22');
-        createChart('topcon-domestic-chart', smmData.topconDomestic, 'Topcon组件-182mm', '#1abc9c');
-        createChart('hjt-module-chart', smmData.hjtModule, 'HJT组件-210mm', '#f39c12');
-        createChart('topcon-fob-182-chart', smmData.topconFob182, 'TOPCon-182mm-FOB', '#3498db');
-        createChart('topcon-fob-210-chart', smmData.topconFob210, 'TOPCon-210mm-FOB', '#9b59b6');
-        createChart('perc-fob-chart', smmData.percFob, 'PERC电池片-FOB', '#e74c3c');
-        createChart('topcon-integrated-chart', smmData.topconIntegrated, 'Topcon一体化', '#2980b9');
-        createChart('topcon-semi-chart', smmData.topconSemi, 'Topcon半一体化', '#27ae60');
     </script>
 </body>
 </html>
