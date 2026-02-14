@@ -571,6 +571,35 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
             margin-bottom: 20px;
+            position: relative;
+            cursor: help;
+        }
+        .section-title-highlight:hover .highlight-formula-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        .highlight-formula-tooltip {
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%) translateY(8px);
+            min-width: 360px;
+            max-width: 90vw;
+            padding: 14px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-color);
+            white-space: pre-line;
+            line-height: 1.6;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            pointer-events: none;
         }
 
         .section-title-highlight-label {
@@ -1191,9 +1220,11 @@
 
         <!-- 爱旭成本预估 -->
         <section class="section">
-            <div class="section-title-highlight">
+            <div class="section-title-highlight" id="highlight-card">
+                <div class="highlight-formula-tooltip" id="highlight-formula-tooltip"></div>
                 <span class="section-title-highlight-label">无银ABC(铜电镀) VS Topcon(SMBB)</span>
                 <span class="section-title-highlight-price" id="abc-zh-vs-topcon-price">—</span>
+                <span class="section-title-highlight-sub" id="weighted-cost-advantage">综合成本优势：—</span>
                 <span class="section-title-highlight-sub" id="sale-price-advantage">国内售价优势：—</span>
                 <span class="section-title-highlight-sub" id="comprehensive-advantage">国内综合优势：—</span>
             </div>
@@ -1206,6 +1237,10 @@
                 <div class="price-param">
                     <span class="price-param-label">硅片价格 (SMM实时):</span>
                     <span class="price-param-value" id="wafer-display">1.18 元/片</span>
+                </div>
+                <div class="price-param">
+                    <span class="price-param-label">银&铜组件综合成本:</span>
+                    <span class="price-param-value" id="abc-weighted-cost-display">— 元/W</span>
                 </div>
             </div>
             
@@ -1747,6 +1782,20 @@
             document.getElementById('silver-display').textContent = silverPrice.toLocaleString() + ' 元/kg';
             document.getElementById('wafer-display').textContent = waferPrice.toFixed(2) + ' 元/片';
             
+            // 银&铜组件综合成本：基于产能加权的爱旭ABC综合成本
+            const abcKeys = ['abc-smbb', 'abc-0bb', 'abc-silverfree-zh', 'abc-silverfree-jn'];
+            let weightedSum = 0, totalCapacity = 0;
+            abcKeys.forEach(key => {
+                const p = productFormulas[key];
+                const cap = parseInt(String(p.capacity), 10) || 0;
+                if (cap > 0) {
+                    weightedSum += p.formula(silverPrice, waferPrice) * cap;
+                    totalCapacity += cap;
+                }
+            });
+            const abcWeightedCost = totalCapacity > 0 ? weightedSum / totalCapacity : 0;
+            document.getElementById('abc-weighted-cost-display').textContent = abcWeightedCost > 0 ? abcWeightedCost.toFixed(3) + ' 元/W' : '— 元/W';
+            
             // 使用 Topcon183成本指数-半一体化预估 作为对比基准
             const topconSemiEstPrice = productFormulas['topcon-semi-est'].formula(silverPrice, waferPrice);
             document.getElementById('smm-baseline').textContent = topconSemiEstPrice.toFixed(3);
@@ -1757,11 +1806,24 @@
             const priceEl = document.getElementById('abc-zh-vs-topcon-price');
             if (priceEl) {
                 if (diffZh <= 0) {
-                    priceEl.textContent = '生产成本优势：- ' + (-diffZh).toFixed(3) + '元/W';
+                    priceEl.textContent = '无银成本优势：- ' + (-diffZh).toFixed(3) + '元/W';
                     priceEl.style.color = 'var(--success-color)';
                 } else {
-                    priceEl.textContent = '生产成本劣势：+ ' + diffZh.toFixed(3) + '元/W';
+                    priceEl.textContent = '无银成本劣势：+ ' + diffZh.toFixed(3) + '元/W';
                     priceEl.style.color = 'var(--danger-color)';
+                }
+            }
+
+            // 综合成本优势 = 银&铜组件综合成本 - Topcon183成本指数-半一体化
+            const weightedCostDiff = abcWeightedCost - topconSemiEstPrice;
+            const weightedAdvEl = document.getElementById('weighted-cost-advantage');
+            if (weightedAdvEl) {
+                if (weightedCostDiff <= 0) {
+                    weightedAdvEl.textContent = '综合成本优势：- ' + (-weightedCostDiff).toFixed(3) + '元/W';
+                    weightedAdvEl.style.color = 'var(--success-color)';
+                } else {
+                    weightedAdvEl.textContent = '综合成本劣势：+ ' + weightedCostDiff.toFixed(3) + '元/W';
+                    weightedAdvEl.style.color = 'var(--danger-color)';
                 }
             }
 
@@ -1780,8 +1842,8 @@
                 }
             }
 
-            // 综合优势：售价优势 + 成本优(劣)势
-            const comprehensiveAdvantage = salePriceAdvantage - diffZh;
+            // 国内综合优势：售价优势 - 综合成本优势（用综合成本对比Topcon）
+            const comprehensiveAdvantage = salePriceAdvantage - weightedCostDiff;
             const compEl = document.getElementById('comprehensive-advantage');
             if (compEl) {
                 if (comprehensiveAdvantage >= 0) {
@@ -1791,6 +1853,12 @@
                     compEl.textContent = '国内综合劣势：' + comprehensiveAdvantage.toFixed(3) + '元/W';
                     compEl.style.color = 'var(--success-color)';
                 }
+            }
+
+            // Hover卡片展示计算公式
+            const tooltipEl = document.getElementById('highlight-formula-tooltip');
+            if (tooltipEl) {
+                tooltipEl.textContent = '【银&铜组件综合成本】\n= (有银SMBB×6GW + 有银0BB×2GW + 无银珠海×10GW + 无银济南×2GW) / 20GW\n= Σ(各产品成本×产能) / 总产能\n\n【综合成本优势】\n= 银&铜组件综合成本 - Topcon183成本指数-半一体化\n\n【国内综合优势】\n= 国内售价优势 - 综合成本优势';
             }
             
             const baselineKey = 'topcon-semi-est';
