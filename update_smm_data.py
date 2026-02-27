@@ -15,6 +15,7 @@ SMM数据自动更新脚本
 """
 
 import json
+import os
 import re
 import sys
 from datetime import datetime, timedelta
@@ -85,30 +86,29 @@ def fetch_smm_data(product_id, start_date, end_date):
         with urlopen(req, timeout=30, context=ssl_context) as response:
             data = json.loads(response.read().decode('utf-8'))
             
-            if not data.get('status') or data['status'] != 'ok':
-                print(f"  警告: API返回状态异常")
-                return []
+            # 新接口: code==0 表示成功，data 为数组
+            if data.get('code') == 0:
+                rows = data.get('data', [])
+                date_key, price_key = 'renew_date', 'average'
+            else:
+                # 旧接口: status=='ok'，data.rows
+                if not data.get('status') or data['status'] != 'ok':
+                    print(f"  警告: API返回状态异常")
+                    return []
+                rows = data.get('data', {}).get('rows', [])
+                date_key, price_key = 'date', 'avg_price'
             
-            rows = data.get('data', {}).get('rows', [])
             result = []
-            
             for row in rows:
-                date = row.get('date', '')
-                # 使用均价 (avg_price)
-                price = row.get('avg_price')
+                date = row.get(date_key) or row.get('date', '')
+                price = row.get(price_key) or row.get('avg_price')
                 if price is None:
-                    # 如果没有avg_price，尝试计算 (low + high) / 2
-                    low = row.get('low_price')
-                    high = row.get('high_price')
+                    low = row.get('low') or row.get('low_price')
+                    high = row.get('highs') or row.get('high') or row.get('high_price')
                     if low is not None and high is not None:
                         price = (float(low) + float(high)) / 2
-                
                 if date and price is not None:
-                    result.append({
-                        'date': date,
-                        'price': float(price)
-                    })
-            
+                    result.append({'date': date, 'price': float(price)})
             return sorted(result, key=lambda x: x['date'])
             
     except HTTPError as e:
@@ -247,8 +247,9 @@ def main():
         print("请检查网络连接或稍后重试")
         sys.exit(1)
     
-    # 更新HTML文件
-    html_path = '/Users/onekey/.minimax-agent/projects/1/index.html'
+    # 更新HTML文件（与脚本同目录的 index.html）
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    html_path = os.path.join(script_dir, 'index.html')
     update_date = today.strftime('%Y-%m-%d')
     
     try:
