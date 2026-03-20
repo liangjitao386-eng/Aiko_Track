@@ -22,11 +22,33 @@ from datetime import datetime, timedelta
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 import ssl
+import socket
 
 # 创建不验证SSL证书的上下文
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
+
+
+def resolve_ipv4_via_doh(hostname: str) -> str | None:
+    """
+    Resolve IPv4 via DNS-over-HTTPS.
+
+    Some local environments fail to resolve certain domains (e.g. hq.smm.cn),
+    so we fall back to DoH and then connect by IP while keeping the original
+    `Host` header.
+    """
+    doh_url = f"https://dns.google/resolve?name={hostname}&type=A"
+    try:
+        with urlopen(doh_url, timeout=20, context=ssl_context) as r:
+            rec = json.loads(r.read().decode("utf-8"))
+        for ans in rec.get("Answer", []):
+            ip = ans.get("data", "")
+            if re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
+                return ip
+    except Exception:
+        return None
+    return None
 
 # SMM产品ID映射
 SMM_PRODUCTS = {
@@ -74,52 +96,73 @@ def fetch_smm_data(product_id, start_date, end_date):
         list: 价格数据列表 [{date, price}, ...]
     """
     url = f"https://hq.smm.cn/ajax/spot/history/{product_id}/{start_date}/{end_date}"
+    host = "hq.smm.cn"
     
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
         'Accept': 'application/json',
-        'Referer': 'https://hq.smm.cn/'
+        'Referer': f'https://{host}/',
+        # When we retry via direct IP, we will keep this host header.
+        'Host': host,
     }
     
-    try:
-        req = Request(url, headers=headers)
+    def fetch_json(target_url: str, target_headers: dict):
+        req = Request(target_url, headers=target_headers)
         with urlopen(req, timeout=30, context=ssl_context) as response:
-            data = json.loads(response.read().decode('utf-8'))
-            
-            # 新接口: code==0 表示成功，data 为数组
-            if data.get('code') == 0:
-                rows = data.get('data', [])
-                date_key, price_key = 'renew_date', 'average'
-            else:
-                # 旧接口: status=='ok'，data.rows
-                if not data.get('status') or data['status'] != 'ok':
-                    print(f"  警告: API返回状态异常")
-                    return []
-                rows = data.get('data', {}).get('rows', [])
-                date_key, price_key = 'date', 'avg_price'
-            
-            result = []
-            for row in rows:
-                date = row.get(date_key) or row.get('date', '')
-                price = row.get(price_key) or row.get('avg_price')
-                if price is None:
-                    low = row.get('low') or row.get('low_price')
-                    high = row.get('highs') or row.get('high') or row.get('high_price')
-                    if low is not None and high is not None:
-                        price = (float(low) + float(high)) / 2
-                if date and price is not None:
-                    result.append({'date': date, 'price': float(price)})
-            return sorted(result, key=lambda x: x['date'])
-            
+            return json.loads(response.read().decode('utf-8'))
+
+    try:
+        data = fetch_json(url, headers)
     except HTTPError as e:
         print(f"  HTTP错误: {e.code}")
         return []
     except URLError as e:
-        print(f"  URL错误: {e.reason}")
-        return []
+        # Some hosts are not resolvable locally; retry via DoH -> IP.
+        reason = getattr(e, "reason", None)
+        if isinstance(reason, socket.gaierror):
+            print(f"  DNS失败，尝试DoH直连 {host}")
+            ip = resolve_ipv4_via_doh(host)
+            if ip:
+                retry_url = f"https://{ip}/ajax/spot/history/{product_id}/{start_date}/{end_date}"
+                try:
+                    data = fetch_json(retry_url, headers)
+                except Exception as e2:
+                    print(f"  重试获取失败: {e2}")
+                    return []
+            else:
+                print(f"  DoH解析失败: {host}")
+                return []
+        else:
+            print(f"  URL错误: {e.reason}")
+            return []
     except Exception as e:
         print(f"  获取失败: {e}")
         return []
+
+    # 新接口: code==0 表示成功，data 为数组
+    if data.get('code') == 0:
+        rows = data.get('data', [])
+        date_key, price_key = 'renew_date', 'average'
+    else:
+        # 旧接口: status=='ok'，data.rows
+        if not data.get('status') or data['status'] != 'ok':
+            print(f"  警告: API返回状态异常")
+            return []
+        rows = data.get('data', {}).get('rows', [])
+        date_key, price_key = 'date', 'avg_price'
+
+    result = []
+    for row in rows:
+        date = row.get(date_key) or row.get('date', '')
+        price = row.get(price_key) or row.get('avg_price')
+        if price is None:
+            low = row.get('low') or row.get('low_price')
+            high = row.get('highs') or row.get('high') or row.get('high_price')
+            if low is not None and high is not None:
+                price = (float(low) + float(high)) / 2
+        if date and price is not None:
+            result.append({'date': date, 'price': float(price)})
+    return sorted(result, key=lambda x: x['date'])
 
 
 def format_data_for_js(data):
