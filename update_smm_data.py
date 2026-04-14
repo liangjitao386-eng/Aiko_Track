@@ -52,7 +52,7 @@ def resolve_ipv4_via_doh(hostname: str) -> str | None:
 
 # SMM产品ID映射
 SMM_PRODUCTS = {
-    'silver': '202512220022',        # Topcon正面细栅银浆
+    'silver': '201102250392',        # 银
     'wafer': '202303220001',         # N型硅片-183mm
     'silicon': '202501060003',       # N型多晶硅
     'cell': '202210280001',          # 单晶Topcon电池片-183mm
@@ -68,7 +68,7 @@ SMM_PRODUCTS = {
 
 # 产品名称（用于打印）
 PRODUCT_NAMES = {
-    'silver': 'Topcon正面细栅银浆',
+    'silver': '银',
     'wafer': 'N型硅片-183mm',
     'silicon': 'N型多晶硅',
     'cell': '单晶Topcon电池片-183mm',
