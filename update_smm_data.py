@@ -21,8 +21,11 @@ import sys
 from datetime import datetime, timedelta
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
+from zoneinfo import ZoneInfo
 import ssl
 import socket
+
+BEIJING_TZ = ZoneInfo("Asia/Shanghai")
 
 # 创建不验证SSL证书的上下文
 ssl_context = ssl.create_default_context()
@@ -223,7 +226,7 @@ def update_html_file(html_path, smm_data, update_date):
         format_data_for_js(smm_data.get('topconSemi', []))
     )
     
-# 使用正则表达式替换smmData部分
+    # 使用正则表达式替换smmData部分
     # 匹配从 "// SMM真实数据" 到 "};" 的整个smmData定义
     pattern = r'// SMM真实数据.*?const smmData = \{.*?\n        \};'
     
@@ -236,67 +239,87 @@ def update_html_file(html_path, smm_data, update_date):
         f'数据更新时间: {update_date}',
         new_content
     )
-    
-    with open(html_path, 'w', encoding='utf-8') as f:
-        f.write(new_content)
+
+    compact_date = update_date.replace("-", "")
+    new_content = re.sub(
+        r'数据更新至\d{8}',
+        f'数据更新至{compact_date}',
+        new_content,
+    )
+
+    changed = new_content != content
+    if changed:
+        with open(html_path, 'w', encoding='utf-8') as f:
+            f.write(new_content)
     
     print(f"\n✅ HTML文件已更新: {html_path}")
+    return changed
 
 
-def main():
+def latest_prices(smm_data):
+    summary = {}
+    for key, rows in smm_data.items():
+        if rows:
+            latest = rows[-1]
+            summary[key] = {
+                "name": PRODUCT_NAMES.get(key, key),
+                "date": latest["date"],
+                "price": latest["price"],
+            }
+    return summary
+
+
+def run_update(html_path=None):
+    """
+    Fetch latest SMM data and write it into index.html.
+
+    Returns a result dict. Raises RuntimeError when required data is missing
+    or the HTML update fails.
+    """
     print("=" * 60)
     print("SMM数据自动更新脚本")
     print("=" * 60)
-    
-    # 计算日期范围
-    today = datetime.now()
-    # 大部分产品取最近45天的数据
+
+    today = datetime.now(BEIJING_TZ)
     start_date = (today - timedelta(days=45)).strftime('%Y-%m-%d')
     end_date = today.strftime('%Y-%m-%d')
-    # 成本指数是周数据，需要更长时间范围
     cost_start_date = (today - timedelta(days=90)).strftime('%Y-%m-%d')
-    
+
     print(f"\n日期范围: {start_date} 至 {end_date}")
     print(f"成本指数日期范围: {cost_start_date} 至 {end_date}")
     print("-" * 60)
-    
+
     smm_data = {}
-    
+
     for key, product_id in SMM_PRODUCTS.items():
         name = PRODUCT_NAMES.get(key, key)
         print(f"\n正在获取: {name} (ID: {product_id})")
-        
-        # 成本指数使用更长的日期范围
+
         if key in ['topconIntegrated', 'topconSemi']:
             data = fetch_smm_data(product_id, cost_start_date, end_date)
         else:
             data = fetch_smm_data(product_id, start_date, end_date)
-        
+
         if data:
             smm_data[key] = data
             latest = data[-1]
             print(f"  ✓ 获取成功: {len(data)}条数据, 最新: {latest['date']} = {latest['price']}")
         else:
             print(f"  ✗ 获取失败")
-    
+
     print("\n" + "=" * 60)
-    
-    # 检查是否有足够的数据
+
     required_keys = ['silver', 'wafer', 'silicon', 'cell']
     missing = [k for k in required_keys if k not in smm_data or not smm_data[k]]
-    
     if missing:
-        print(f"❌ 缺少必要数据: {missing}")
-        print("请检查网络连接或稍后重试")
-        sys.exit(1)
-    
-    # 更新HTML文件（与脚本同目录的 index.html）
+        raise RuntimeError(f"缺少必要数据: {missing}")
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    html_path = os.path.join(script_dir, 'index.html')
+    html_path = html_path or os.path.join(script_dir, 'index.html')
     update_date = today.strftime('%Y-%m-%d')
-    
+
     try:
-        update_html_file(html_path, smm_data, update_date)
+        changed = update_html_file(html_path, smm_data, update_date)
         print("\n✅ 所有数据更新完成!")
         print("\n最新价格摘要:")
         print("-" * 40)
@@ -306,7 +329,23 @@ def main():
                 name = PRODUCT_NAMES.get(key, key)
                 print(f"  {name}: {latest['price']:.4f} ({latest['date']})")
     except Exception as e:
-        print(f"❌ 更新HTML失败: {e}")
+        raise RuntimeError(f"更新HTML失败: {e}") from e
+
+    return {
+        "ok": True,
+        "changed": changed,
+        "update_date": update_date,
+        "html_path": html_path,
+        "latest": latest_prices(smm_data),
+    }
+
+
+def main():
+    try:
+        run_update()
+    except RuntimeError as e:
+        print(f"❌ {e}")
+        print("请检查网络连接或稍后重试")
         sys.exit(1)
 
 

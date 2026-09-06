@@ -1,0 +1,41 @@
+name: Daily SMM Data Update
+
+on:
+  schedule:
+    # 00:00 北京时间 = 16:00 UTC
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: daily-smm-update
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch latest SMM data
+        run: python3 update_smm_data.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No webpage data changes"
+          else
+            git commit -m "update data"
+            git push
+          fi
