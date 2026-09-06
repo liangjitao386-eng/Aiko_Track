@@ -1660,24 +1660,26 @@
         };
 
         // 产品公式定义
+        // 专利费：2亿元由 22.6GW 平摊改为 32.6GW 平摊（原 0.017 元/W → 0.0118 元/W）
+        const PATENT_FEE = 0.017 * 22.6 / 32.6;
         const productFormulas = {
             'abc-0bb': {
                 name: '有银ABC-0BB组件（义乌）',
                 capacity: '9.6GW',
-                formula: (silver, wafer) => 0.485 + silver * 0.00000928 + wafer * 0.95 / 9.16 + 0.017 - 0.0000015 * silver,
-                formulaText: '成本 = 0.485 + 银价 × 0.00000928 + 硅片 × 0.95 ÷ 9.16 + 专利费0.017 - 0.0000015 × 银价\n     = 0.502 + 银价 × 0.00000778 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
+                formula: (silver, wafer) => 0.485 + silver * 0.00000928 + wafer * 0.95 / 9.16 + PATENT_FEE - 0.0000015 * silver,
+                formulaText: '成本 = 0.485 + 银价 × 0.00000928 + 硅片 × 0.95 ÷ 9.16 + 专利费0.0118 - 0.0000015 × 银价\n     = 0.4968 + 银价 × 0.00000778 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.0118，2亿/32.6GW)'
             },
             'abc-silverfree-zh': {
                 name: '无银ABC组件（珠海）',
                 capacity: '10GW',
-                formula: (silver, wafer) => 0.485 + wafer * 0.95 / 9.16 + 0.017 + 0.09,
-                formulaText: '成本 = 0.485 + 硅片 × 0.95 ÷ 9.16 + 专利费0.017 + 0.09(铜电镀成本与设备折旧)\n     = 0.592 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
+                formula: (silver, wafer) => 0.485 + wafer * 0.95 / 9.16 + PATENT_FEE + 0.09,
+                formulaText: '成本 = 0.485 + 硅片 × 0.95 ÷ 9.16 + 专利费0.0118 + 0.09(铜电镀成本与设备折旧)\n     = 0.5868 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.0118，2亿/32.6GW)'
             },
             'abc-silverfree-jn': {
                 name: '无银ABC组件（济南）',
                 capacity: '3GW',
-                formula: (silver, wafer) => 0.485 + wafer * 0.95 / 9.16 + 0.017 + 0.09 - 0.03,
-                formulaText: '成本 = 无银ABC（珠海）- 0.04\n     = 0.562 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.017)'
+                formula: (silver, wafer) => 0.485 + wafer * 0.95 / 9.16 + PATENT_FEE + 0.09 - 0.03,
+                formulaText: '成本 = 无银ABC（珠海）- 0.04\n     = 0.5568 + 硅片 × 0.95 ÷ 9.16\n     (含专利费0.0118，2亿/32.6GW)'
             },
             'topcon-semi-est': {
                 name: 'Topcon183成本指数-半一体化',
